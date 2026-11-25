@@ -24,8 +24,19 @@ if(prod)app.set('trust proxy',1);
 app.disable('x-powered-by');
 app.set('view engine','ejs');app.set('views',path.join(__dirname,'views'));
 app.use((req,res,next)=>{res.set('X-Content-Type-Options','nosniff');res.set('Referrer-Policy','strict-origin-when-cross-origin');res.set('X-Frame-Options','SAMEORIGIN');next();});
-app.use('/assets',express.static(path.join(__dirname,'assets')));
-app.use('/templates',express.static(path.join(__dirname,'templates')));
+// Serve bundled assets through a route handler instead of express.static so the files
+// also load on Vercel, where express.static() is ignored (the files are kept in the
+// function bundle through includeFiles in vercel.json).
+function staticAssets(folder){
+ return (req,res,next)=>{
+  let rel;try{rel=decodeURIComponent(req.path);}catch{return res.sendStatus(400);}
+  if(!rel||rel.split('/').some(s=>s.startsWith('.')))return res.sendStatus(404);
+  res.set('Cache-Control','public, max-age=300');
+  res.sendFile(rel,{root:path.join(__dirname,folder),dotfiles:'deny'},e=>{if(e&&!res.headersSent)res.sendStatus(e.status||404);});
+ };
+}
+app.use('/assets',staticAssets('assets'));
+app.use('/templates',staticAssets('templates'));
 app.use(express.urlencoded({extended:false,limit:'20mb'}));app.use(express.json({limit:'20mb'}));
 const store=prod?new MySQLStore({...db.config,createDatabaseTable:true}):undefined;
 app.use(session({name:'gpi_cipayung_session',secret,resave:false,saveUninitialized:false,...(store?{store}:{}),cookie:{httpOnly:true,sameSite:'lax',secure:prod,maxAge:8*60*60*1000}}));

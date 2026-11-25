@@ -7,7 +7,10 @@ const view = require('./public-view');
 const connect = require('./connect');
 const website = require('./website-content');
 const docs = require('./website-documentation');
-const config = {host:process.env.DB_HOST||'localhost',port:Number(process.env.DB_PORT||3306),user:process.env.DB_USER||'root',password:process.env.DB_PASSWORD||'',database:process.env.DB_NAME||'gpi_cipayung',charset:'utf8mb4',timezone:'+07:00',dateStrings:true,decimalNumbers:true};
+// Managed MySQL providers (Aiven, TiDB Cloud, PlanetScale, Railway) require TLS.
+// Set DB_SSL=1 when DB_HOST is not a local server.
+const dbSSL = ['1','true','required'].includes(String(process.env.DB_SSL||'').trim().toLowerCase());
+const config = {host:process.env.DB_HOST||'localhost',port:Number(process.env.DB_PORT||3306),user:process.env.DB_USER||'root',password:process.env.DB_PASSWORD||'',database:process.env.DB_NAME||'gpi_cipayung',charset:'utf8mb4',timezone:'+07:00',dateStrings:true,decimalNumbers:true,...(dbSSL?{ssl:{minVersion:'TLSv1.2'}}:{})};
 const pool=mysql.createPool({...config,connectionLimit:10,waitForConnections:true});
 pool.on('connection',c=>c.query("SET time_zone = '+07:00'"));
 const tables = {dokumentasi:['website_documentation','service_id ASC, urutan ASC, id DESC'],acara:['website_events','urutan ASC, tanggal_mulai ASC, id ASC'],ibadah_konten:['website_services','urutan ASC, id ASC'],terhubung:['connect_requests','id DESC'],connect_categories:['connect_categories','urutan ASC, id ASC'],users:['users',"FIELD(role,'admin','majelis','pendeta'), nama_lengkap ASC"],jemaat:['jemaat','COALESCE(nomor_urut, 999999) ASC, nama_keluarga ASC, nama_lengkap ASC'],jadwal:['jadwal_pelayanan','tanggal ASC, jam_mulai ASC'],pengumuman:['pengumuman','tanggal_publish DESC, id DESC'],media:['media_uploads','id DESC'],pesan:['chatbot_messages','id DESC'],sakramen:['sakramen','tanggal DESC, id DESC'],persembahan:['persembahan','tanggal DESC, id DESC'],pernikahan:['sakramen_pernikahan','tanggal_nikah DESC, id DESC'],whatsapp:['whatsapp_logs','id DESC'],tim_pelayan:['tim_pelayan_members','kategori ASC, urutan ASC, id ASC'],pendalaman_alkitab:['pendalaman_alkitab','urutan ASC, id ASC']};

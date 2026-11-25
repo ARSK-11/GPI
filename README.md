@@ -2,6 +2,10 @@
 
 Dokumentasi Youth Revive Generation dan Kaum Ibu kini mendukung album Google Drive, file Google Drive, dan upload foto/video/PDF via Dashboard → Konten Ibadah. Lihat `docs/PANDUAN_DOKUMENTASI_FRESH_5.md` untuk instalasi, hak akses, dan pengaturan Google Drive.
 
+## Deploy ke Vercel
+
+Vercel hanya bisa menjalankan halaman publik dan dashboard bila memakai MySQL eksternal. Upload file, bot WhatsApp, dan reminder otomatis tetap harus berjalan di server sendiri. Konfigurasi (`vercel.json`, variabel environment, impor database, dan batasan fitur) ada di `docs/DEPLOY_VERCEL.md`.
+
 ---
 
 # GPI Cipayung — JavaScript (Node.js)
@@ -98,7 +102,9 @@ GPI/
 ├── test/                       # Uji render, API, upload, dan bot WhatsApp
 ├── docs/                       # Panduan dan catatan update
 ├── whatsapp-cron.js            # CLI reminder H-1
+├── vercel.json                 # Konfigurasi deploy Vercel (includeFiles + maxDuration)
 ├── .env.example
+├── .env.vercel.example         # Contoh variabel environment untuk Vercel
 └── package.json
 ```
 

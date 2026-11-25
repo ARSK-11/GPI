@@ -1,5 +1,7 @@
 node_modules/
 .env
+.env.vercel
+*-dump.sql
 *.log
 .wwebjs_cache/
 .wa-qr-auth*/

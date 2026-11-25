@@ -11,13 +11,24 @@ const IMAGE_MAX_BYTES = 10 * 1024 * 1024;
 const VIDEO_MAX_BYTES = 1024 * 1024 * 1024; // 1 GiB
 const tempRoot = path.resolve(__dirname, '../uploads/media/.warta-tmp');
 const destRoot = path.resolve(__dirname, '../uploads/media/warta');
-fs.mkdirSync(tempRoot, { recursive: true, mode: 0o700 });
+// Create the temp folder on first upload instead of at import time. A read-only
+// filesystem (Vercel) must not crash the whole app during cold start.
+let tempReady = false;
+function ensureTempRoot(){
+  if (tempReady) return tempRoot;
+  try { fs.mkdirSync(tempRoot, { recursive: true, mode: 0o700 }); tempReady = true; }
+  catch (e) { if (!['EROFS', 'EACCES', 'EPERM'].includes(e.code)) throw e; }
+  return tempRoot;
+}
 const allow = new Set(['.jpg', '.jpeg', '.png', '.webp', '.mp4', '.webm']);
 const videoExt = new Set(['.mp4', '.webm']);
 const extname = name => path.extname(String(name || '')).toLowerCase();
 const upload = multer({
   storage: multer.diskStorage({
-    destination: (_req, _f, cb) => cb(null, tempRoot),
+    destination: (_req, _f, cb) => {
+      try { cb(null, ensureTempRoot()); }
+      catch (e) { cb(Object.assign(new Error('Folder unggahan tidak dapat ditulis di server ini.'), { status: 500, cause: e })); }
+    },
     filename: (_req, _f, cb) => cb(null, `warta-${Date.now()}-${crypto.randomBytes(12).toString('hex')}.tmp`)
   }),
   limits: { fileSize: VIDEO_MAX_BYTES, files: 1, fields: 100, fieldSize: 1024 * 1024, parts: 120 },
