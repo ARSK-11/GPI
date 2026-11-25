@@ -16,8 +16,10 @@ const destRoot = path.resolve(__dirname, '../uploads/media/warta');
 let tempReady = false;
 function ensureTempRoot(){
   if (tempReady) return tempRoot;
+  // Serverless filesystems (Vercel) are read-only; never attempt a write there.
+  if (process.env.VERCEL) throw Object.assign(new Error('Upload file tidak tersedia di Vercel. Jalankan upload dari server sendiri.'), { status: 501 });
   try { fs.mkdirSync(tempRoot, { recursive: true, mode: 0o700 }); tempReady = true; }
-  catch (e) { if (!['EROFS', 'EACCES', 'EPERM'].includes(e.code)) throw e; }
+  catch (e) { if (!['EROFS', 'EACCES', 'EPERM', 'ENOENT'].includes(e.code)) throw e; }
   return tempRoot;
 }
 const allow = new Set(['.jpg', '.jpeg', '.png', '.webp', '.mp4', '.webm']);
