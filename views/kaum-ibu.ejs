@@ -1,0 +1,37 @@
+<%- public_head("Kaum Ibu — GPI Cipayung", s) %>
+<body class="team-page organization-page kaum-ibu-page">
+<%- public_header(s, 'pelayanan') %>
+
+<header class="page-hero team-hero"><div class="container">
+  <div>
+    <span class="label">Organisasi Pelayanan</span>
+    <h1>Kaum Ibu</h1>
+    <p>Struktur pelayanan Kaum Ibu GPI Cipayung sebagai wadah pertumbuhan rohani, doa, perhatian jemaat, dan pelayanan kasih bagi keluarga gereja.</p>
+  </div>
+  <img data-logo-gereja src="<%- pv_esc(pv_logo(s)) %>" alt="Logo <%- pv_esc(s['nama_gereja']) %>">
+</div></header>
+
+<div class="breadcrumb-row"><div class="container"><a href="/">Beranda</a> / <a href="pelayanan">Pelayanan</a> / Kaum Ibu</div></div>
+
+<section class="section org-section"><div class="container">
+  <div class="section-center"><span class="label">Struktur Kaum Ibu</span><h2>Organisasi Kaum Ibu GPI Cipayung</h2><div class="divider"></div>
+    <p class="lead">BPH Kaum Ibu <strong>Tim Pelayan</strong> Periode <strong>2024-2027</strong>.</p></div>
+
+  <div class="org-flow">
+    <%- renderRole('Pembina', 'top') %>
+    <%- renderRole('Ketua') %>
+    <div class="org-two-cols">
+      <%- renderRole('Sekretaris') %>
+      <%- renderRole('Bendahara') %>
+    </div>
+    <div class="org-two-cols">
+      <%- renderRole('Sie. Doa') %>
+      <%- renderRole('Sie. Pemerhati') %>
+    </div>
+    <%- renderRole('Anggota', 'wide') %>
+  </div>
+</div></section>
+
+<div class="back-cta"><a class="btn" href="pelayanan">← Kembali ke Bidang Pelayanan</a></div>
+
+<%- public_footer(s) %>

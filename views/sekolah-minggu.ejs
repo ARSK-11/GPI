@@ -1,0 +1,14 @@
+<%- public_head("Sekolah Minggu — GPI Cipayung", s) %>
+<body class="team-page organization-page sekolah-minggu-page">
+<%- public_header(s, 'pelayanan') %>
+<header class="page-hero team-hero"><div class="container">
+  <div><span class="label">Pelayanan Anak</span><h1>Sekolah Minggu</h1><p>Pelayanan pembinaan iman anak dan generasi muda sejak dini di lingkungan GPI Cipayung.</p></div>
+  <img data-logo-gereja src="<%- pv_esc(pv_logo(s)) %>" alt="Logo <%- pv_esc(s['nama_gereja']) %>">
+</div></header>
+<div class="breadcrumb-row"><div class="container"><a href="/">Beranda</a> / <a href="pelayanan">Pelayanan</a> / Sekolah Minggu</div></div>
+<section class="section org-section"><div class="container">
+  <div class="section-center"><span class="label">Tim Sekolah Minggu</span><h2>Pelayan Sekolah Minggu</h2><div class="divider"></div><p class="lead">Melayani, Mengajar dan Mendidik Anak Sekolah Minggu <strong>Para Guru Sekolah Minggu</strong> Siap Melayani dengan Penuh Kasih <strong>Sekolah Minggu</strong>.</p></div>
+  <div id="sekolahMingguGrid" class="profile-grid org-grid org-role-grid"><%- team['sekolahMinggu'] ?? '<div class="empty">Data Sekolah Minggu belum diisi.</div>' %></div>
+</div></section>
+<div class="back-cta"><a class="btn" href="pelayanan">← Kembali ke Bidang Pelayanan</a></div>
+<%- public_footer(s) %>

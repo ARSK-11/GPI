@@ -1,0 +1,37 @@
+'use strict';
+(() => {
+ const root=document.getElementById('gpiHelp');if(!root)return;
+ const $=s=>root.querySelector(s), pages={home:$('#gpiHelpHome'),knowledge:$('#gpiHelpKnowledge'),detail:$('#gpiHelpDetail'),messages:$('#gpiHelpMessages')};
+ let articles=[],session=null,csrf='',timer=null,loaded=false,busy=false,bootPromise=null;
+ const storageKey='gpi-cipayung-private-chat-v1';
+ try{const x=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(x&&/^\d+$/.test(String(x.id))&&/^[a-f0-9]{64}$/.test(x.token))session=x;}catch{}
+ async function request(url,{method='GET',body}={}){
+  const options={method,credentials:'same-origin',cache:'no-store',headers:{'Accept':'application/json'}};
+  if(body){options.headers['Content-Type']='application/json';options.headers['X-CSRF-Token']=csrf;options.body=JSON.stringify(body);}
+  const res=await fetch(url,options);const json=await res.json().catch(()=>({success:false,message:'Respons server tidak valid.'}));if(!res.ok||!json.success)throw new Error(json.message||'Tidak dapat menghubungi server.');return json;
+ }
+ async function boot(){if(loaded)return;if(bootPromise)return bootPromise;bootPromise=(async()=>{try{const [t,a]=await Promise.all([request('/support-api/csrf'),request('/support-api/articles')]);csrf=t.csrf_token;articles=a.articles||[];renderList($('#gpiHelpRecommended'),articles.slice(0,4));renderList($('#gpiHelpArticleList'),articles);loaded=true;if(session)await loadThread();}catch(e){$('#gpiHelpRecommended').textContent='Pusat bantuan sementara tidak dapat dimuat. '+e.message;throw e;}finally{bootPromise=null;}})();return bootPromise;}
+
+ function open(){root.classList.add('gpi-help-open');$('#gpiHelpPanel').hidden=false;$('#gpiHelpToggle').setAttribute('aria-expanded','true');boot().catch(()=>{});if(session&&!pages.messages.hidden)startPolling();}
+ function close(){stopPolling();root.classList.remove('gpi-help-open');$('#gpiHelpPanel').hidden=true;$('#gpiHelpToggle').setAttribute('aria-expanded','false');}
+ function page(name){for(const [k,el] of Object.entries(pages))el.hidden=k!==name;$('#gpiHelpHeading').textContent=({home:'Selamat datang!',knowledge:'Pusat Bantuan',detail:'Penjelasan Artikel',messages:'Hubungi Kami'})[name];root.querySelectorAll('.gpi-help-foot button').forEach(b=>b.classList.toggle('active',b.dataset.gpiPage===name));if(name==='messages'){showConversation();if(session)loadThread();}else stopPolling();}
+ function makeArticleButton(article){const b=document.createElement('button');b.type='button';b.className='gpi-help-article-link';const x=document.createElement('strong');x.textContent=article.title;const y=document.createElement('small');y.textContent=article.category+' · '+article.summary;b.append(x,y);b.addEventListener('click',()=>showArticle(article));return b;}
+ function renderList(container,items){container.replaceChildren();if(!items.length){const p=document.createElement('p');p.className='gpi-help-muted';p.textContent='Artikel tidak ditemukan. Anda juga bisa menghubungi admin melalui chat.';container.append(p);return;}items.forEach(a=>container.append(makeArticleButton(a)));}
+ function showArticle(a){$('#gpiHelpDetailCategory').textContent=a.category;$('#gpiHelpDetailTitle').textContent=a.title;$('#gpiHelpDetailBody').textContent=a.body;const link=$('#gpiHelpDetailLink');if(a.link_path&&/^\/(?!\/)/.test(a.link_path)){link.href=a.link_path;link.hidden=false;}else link.hidden=true;page('detail');}
+ function search(input,dest){const q=input.value.trim().toLowerCase();const hits=!q?articles:articles.filter(a=>[a.title,a.category,a.summary,a.body].some(x=>String(x).toLowerCase().includes(q)));renderList(dest,hits.slice(0,18));}
+ function showConversation(){const active=!!session;$('#gpiHelpStartForm').hidden=active;$('#gpiHelpConversation').hidden=!active;if(active)startPolling();}
+ function stopPolling(){if(timer){clearInterval(timer);timer=null;}}
+ function startPolling(){stopPolling();if(session&&root.classList.contains('gpi-help-open')&&!pages.messages.hidden)timer=setInterval(()=>{if(!document.hidden)loadThread();},7000);}
+ function renderMessages(messages){const log=$('#gpiHelpChatLog'),nearBottom=log.scrollHeight-log.scrollTop-log.clientHeight<85;log.replaceChildren();if(!messages.length){const p=document.createElement('p');p.className='gpi-help-muted';p.textContent='Percakapan dibuat. Tulis pesan pertama Anda kepada pengurus gereja.';log.append(p);}
+  messages.forEach(m=>{const bubble=document.createElement('div');bubble.className='gpi-help-bubble '+(m.sender==='visitor'?'mine':'theirs');const label=document.createElement('small');label.textContent=m.sender==='visitor'?'Anda':'Admin GPI Cipayung';const body=document.createElement('p');body.textContent=m.body;bubble.append(label,body);log.append(bubble);});if(nearBottom)log.scrollTop=log.scrollHeight;}
+ async function loadThread(){if(!session||busy)return;busy=true;try{const q=new URLSearchParams({id:session.id,token:session.token});const a=await request('/support-api/thread?'+q);renderMessages(a.messages||[]);$('#gpiHelpSendForm').hidden=a.thread.status==='selesai';$('#gpiHelpChatStatus').textContent=a.thread.status==='selesai'?'Percakapan ini telah ditutup oleh admin.':'';}catch(e){$('#gpiHelpChatStatus').textContent=e.message;}finally{busy=false;}}
+ $('#gpiHelpToggle').addEventListener('click',()=>root.classList.contains('gpi-help-open')?close():open());$('#gpiHelpClose').addEventListener('click',close);
+ root.addEventListener('click',e=>{const button=e.target.closest('[data-gpi-page]');if(button)page(button.dataset.gpiPage);});
+ $('#gpiHelpSearch').addEventListener('input',()=>search($('#gpiHelpSearch'),$('#gpiHelpSearchResults')));
+ $('#gpiHelpArticleSearch').addEventListener('input',()=>search($('#gpiHelpArticleSearch'),$('#gpiHelpArticleList')));
+ $('#gpiHelpStartForm').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget,button=form.querySelector('[type=submit]');if(!form.reportValidity())return;button.disabled=true;$('#gpiHelpStartStatus').textContent='Membuka chat…';try{if(!csrf)await boot();const data=Object.fromEntries(new FormData(form));const a=await request('/support-api/start',{method:'POST',body:data});session={id:a.id,token:a.token};sessionStorage.setItem(storageKey,JSON.stringify(session));form.reset();$('#gpiHelpStartStatus').textContent='';showConversation();renderMessages([]);startPolling();$('#gpiHelpMessageInput').focus();}catch(err){$('#gpiHelpStartStatus').textContent=err.message;}finally{button.disabled=false;}});
+ $('#gpiHelpSendForm').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget,txt=$('#gpiHelpMessageInput');const message=txt.value.trim();if(!message||!session)return;const b=form.querySelector('button');b.disabled=true;try{await request('/support-api/message',{method:'POST',body:{...session,pesan:message}});txt.value='';$('#gpiHelpChatStatus').textContent='Pesan terkirim.';await loadThread();}catch(err){$('#gpiHelpChatStatus').textContent=err.message;}finally{b.disabled=false;}});
+ $('#gpiHelpNewChat').addEventListener('click',()=>{if(!confirm('Mulai percakapan baru? Riwayat chat sebelumnya tidak lagi dapat dibuka dari perangkat ini.'))return;session=null;sessionStorage.removeItem(storageKey);stopPolling();showConversation();$('#gpiHelpStartStatus').textContent='';});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&session&&root.classList.contains('gpi-help-open')&&!pages.messages.hidden)loadThread();});
+ page('home');
+})();

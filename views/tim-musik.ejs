@@ -1,0 +1,46 @@
+<%- public_head("Tim Musik & Singers — GPI Cipayung", s) %>
+<body class="team-page team-music-page">
+<%- public_header(s, 'pelayanan') %>
+
+<header class="page-hero team-hero"><div class="container">
+  <div>
+    <span class="label">Bidang Pelayanan</span>
+    <h1>Tim Musik &amp; Singers</h1>
+    <p>Pelayanan musik dan singers GPI Cipayung yang melayani Tuhan melalui pujian, penyembahan, dan musik yang membawa jemaat semakin dekat kepada Tuhan.</p>
+  </div>
+  <img data-logo-gereja src="<%- pv_esc(pv_logo(s)) %>" alt="Logo <%- pv_esc(s['nama_gereja']) %>">
+</div></header>
+
+<div class="breadcrumb-row"><div class="container"><a href="/">Beranda</a> / <a href="pelayanan">Pelayanan</a> / Tim Musik &amp; Singers</div></div>
+
+<section class="section music-section"><div class="container">
+  <div class="section-center"><span class="label">Musisi Gereja</span><h2>Pemain Musik</h2><div class="divider"></div>
+    <p class="lead">Tim pemain musik berperan mendukung suasana ibadah melalui iringan musik yang tertib, harmonis, dan penuh penyembahan.</p></div>
+  <div id="musicPlayerGrid" class="profile-grid ministry-grid"><%- team['musicPlayer'] %></div>
+</div></section>
+
+<section class="section alt reserve-section"><div class="container">
+  <div class="section-center"><span class="label">Pendukung Pelayanan Musik</span><h2>Pemain Cadangan</h2><div class="divider"></div>
+    <p class="lead">Pemain cadangan membantu menjaga kesinambungan pelayanan musik dan siap mendukung kebutuhan ibadah sesuai jadwal pelayanan.</p></div>
+  <div id="musicReserveGrid" class="profile-grid ministry-grid three"><%- team['musicReserve'] %></div>
+</div></section>
+
+<section class="section singers-section"><div class="container">
+  <div class="section-center"><span class="label">Pelayan Pujian</span><h2>Singers / Pujian</h2><div class="divider"></div>
+    <p class="lead">Tim singers melayani jemaat dalam pujian dan penyembahan, membantu membangun suasana ibadah yang hidup dan penuh sukacita.</p></div>
+  <div id="singerGrid" class="profile-grid ministry-grid three"><%- team['singer'] %></div>
+</div></section>
+
+<section class="section dark-section music-note-section"><div class="container">
+  <div class="section-center"><span class="label">Catatan Pelayanan</span><h2>Melayani dengan Harmoni</h2><div class="divider"></div>
+    <p class="lead">Data nama, peran, urutan, dan foto di halaman ini tersinkron dari dashboard admin menu Tim Pelayan. Jika data admin belum tersedia, halaman menampilkan data contoh agar layout tetap rapi.</p></div>
+  <div class="note-cards">
+    <article class="note-card"><span class="note-icon"></span><h3>Musik</h3><p>Mengiringi ibadah melalui instrumen musik yang mendukung pujian jemaat.</p></article>
+    <article class="note-card"><h3>Pujian</h3><p>Memimpin dan menopang jemaat dalam suasana penyembahan yang tertib.</p></article>
+    <article class="note-card"><h3>Pelayanan</h3><p>Melayani dengan kerendahan hati untuk memuliakan Tuhan dalam setiap ibadah.</p></article>
+  </div>
+</div></section>
+
+<div class="back-cta"><a class="btn" href="pelayanan">← Kembali ke Bidang Pelayanan</a></div>
+
+<%- public_footer(s) %>

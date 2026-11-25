@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="<%- e(csrf) %>">
+  <title>Dashboard Admin — <%- e(APP_NAME) %></title>
+  <link rel="icon" type="image/jpeg" href="assets/img/logo-gpi-cipayung.jpg">
+  <link rel="apple-touch-icon" href="assets/img/logo-gpi-cipayung.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=<%- e(assetCss) %>">
+  <link rel="stylesheet" href="/assets/css/admin-refresh.css?v=4"><link rel="stylesheet" href="/assets/css/website-docs.css?v=5"><link rel="stylesheet" href="/assets/css/support-admin.css?v=2"><link rel="stylesheet" href="/assets/css/admin-revisi.css?v=2">
+</head>
+<body class="admin-body">
+  <div class="admin-shell">
+    <aside class="sidebar">
+      <a class="brand" href="admin"><img class="brand-logo" src="assets/img/logo-gpi-cipayung.jpg" alt="Logo GPI Cipayung"><span><b>GPI Cipayung</b><small>Portal Internal</small></span></a>
+      <nav class="side-nav">
+        <% for (const [section, icon, label] of navItems) { %>
+          <% if (permissions[section.replaceAll('-', '_')]?.view) { %>
+            <button class="<%- section === 'dashboard' ? 'active' : '' %>" data-section="<%- e(section) %>"><%- nav_icon(icon) %><%- e(label) %></button>
+          <% } %>
+        <% } %>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <button class="mobile-menu" data-mobile-sidebar aria-label="Buka menu">☰</button>
+        <img class="topbar-logo" src="assets/img/logo-gpi-cipayung.jpg" alt="Logo GPI Cipayung">
+        <div class="topbar-title">
+          <h1>Portal Gereja</h1>
+          <span><%- e(roleLabel) %> · <%- e(user['nama_lengkap'] ?? 'Pengguna') %></span>
+        </div>
+        <div class="admin-user">
+          <button type="button" class="btn small ghost" id="refreshAll">Refresh</button>
+          <a class="btn small ghost" href="/" target="_blank">Website</a>
+          <form method="post" action="/logout"><input type="hidden" name="csrf_token" value="<%- e(csrf) %>"><button class="btn small danger" type="submit">Logout</button></form>
+        </div>
+      </header>
+
+      <section id="section-dashboard" class="admin-section active">
+        <div class="portal-hero"><div><span class="portal-kicker">GPI CIPAYUNG · PORTAL INTERNAL</span><h2>Selamat datang, <%- e(user.nama_lengkap || roleLabel) %>.</h2><p>Kelola pelayanan, data jemaat, dan komunikasi gereja dari satu tempat.</p></div><a class="portal-hero-link" href="/" target="_blank" rel="noopener">Lihat website ↗</a></div>
+        <div class="portal-overview"><div><span class="portal-kicker">RINGKASAN</span><h2>Dashboard Gereja</h2></div><p>Data operasional terkini</p></div>
+        <div class="stat-grid" id="statGrid"></div>
+        <% if(permissions.terhubung?.view){ %><div class="portal-inbox"><div><span class="portal-kicker">KOMUNIKASI JEMAAT</span><h3>Formulir Terhubung</h3><p>Lihat permohonan baptis, doa, konseling, kesaksian, dan komitmen iman.</p></div><button class="btn" type="button" data-go-section="terhubung">Buka formulir ↗</button></div><% } %>
+      </section>
+
+
+      <% for(const [key,heading,desc] of [['acara','Acara Gereja','Kelola poster, tanggal, lokasi, dan informasi acara di beranda.'],['ibadah_konten','Konten Ibadah','Kelola halaman ibadah dan warta pelayanan, pengumuman ulang tahun, foto serta video.']]){const section=key.replaceAll('_','-'); %>
+      <section id="section-<%- section %>" class="admin-section">
+        <div class="section-head"><div><span class="portal-kicker">WEBSITE PUBLIK</span><h2><%- heading %></h2><p class="muted"><%- desc %></p></div><% if(permissions[key]?.create){ %><button type="button" class="btn" data-cms-add="<%- key %>">+ Tambah <%- key==='acara'?'acara':'ibadah' %></button><% } %></div>
+        <div class="cms-notice" id="cmsNotice-<%- key %>" hidden></div>
+        <div class="cms-admin-grid" id="cmsList-<%- key %>"></div>
+        <% if(key==='ibadah_konten'){ %>
+        <section class="docs-admin-section" id="docsAdminArea"><div class="section-head"><div><span class="portal-kicker">GALERI · DOKUMENTASI</span><h2>Dokumentasi Ibadah</h2><p class="muted">Kelola foto, video, PDF, serta album Google Drive. Semua perubahan muncul pada halaman ibadah terkait.</p></div><% if(permissions.ibadah_konten?.create){ %><button class="btn" type="button" data-doc-add>+ Tambah Dokumentasi</button><% } %></div>
+          <div class="docs-admin-filters"><label for="docsServiceFilter">Halaman ibadah:</label><select id="docsServiceFilter"><option value="">Semua halaman</option></select><span id="docsAdminCount" class="muted"></span></div>
+          <div class="docs-admin-list" id="docsAdminList"></div>
+        </section>
+        <div class="gpi-admin-warta"><div class="section-head"><div><span class="portal-kicker">WARTA · BERITA GEREJA</span><h2>Warta Pelayanan & Ulang Tahun</h2><p>Publikasikan pengumuman, foto kegiatan, atau video singkat di halaman Warta dan beranda.</p></div><% if(permissions.pengumuman?.create){ %><button class="btn" type="button" data-open-modal="pengumumanModal">+ Tambah Warta</button><% } %></div><div class="table-card"><table id="tablePengumuman"></table></div></div>
+        <% } %>
+      </section><% } %>
+      <dialog id="docDialog" class="docs-admin-dialog" aria-labelledby="docDialogTitle">
+        <div class="cms-dialog-head"><div><span class="portal-kicker">GALERI IBADAH</span><h2 id="docDialogTitle">Tambah Dokumentasi</h2></div><button type="button" class="btn small ghost" id="docClose" aria-label="Tutup">×</button></div>
+        <form id="docForm" enctype="multipart/form-data">
+          <input type="hidden" name="id">
+          <label>Halaman ibadah *<select name="service_id" required></select></label>
+          <label>Judul dokumentasi *<input name="judul" maxlength="180" required placeholder="Contoh: Kegiatan Youth November 2026"></label>
+          <label class="full">Deskripsi singkat<textarea name="deskripsi" rows="3" maxlength="5000" placeholder="Keterangan foto, video, atau dokumen"></textarea></label>
+          <label>Sumber dokumentasi *<select name="source" required><option value="upload">Upload dari perangkat</option><option value="drive_file">Tautan file Google Drive</option><option value="drive_folder">Album/folder Google Drive</option></select></label>
+          <label data-doc-drive-type>Tipe file Google Drive<select name="media_type"><option value="photo">Foto</option><option value="video">Video</option><option value="pdf">PDF</option></select></label>
+          <label class="full" data-doc-upload>Upload foto / video / PDF<input type="file" name="document_file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime,application/pdf"><small class="docs-hint">JPG/PNG/WebP maksimum 10 MB · PDF maksimum 15 MB · Video MP4/WebM/MOV maksimum 30 MB. Untuk berkas besar, gunakan Google Drive.</small></label>
+          <label class="full" data-doc-link>URL Google Drive<input name="external_url" type="url" placeholder="https://drive.google.com/drive/folders/..." maxlength="1024"><small class="docs-hint">Buka akses Google Drive: Siapa saja yang memiliki link → Pelihat agar pengunjung dapat melihat kontennya.</small></label>
+          <label>Urutan<input name="urutan" type="number" min="0" max="9999" value="99" required></label>
+          <label>Status<select name="status"><option value="published">Publikasikan</option><option value="draft">Draft (tersembunyi)</option></select></label>
+          <div class="docs-form-actions"><button class="btn" type="submit">Simpan Dokumentasi</button><button type="button" class="btn ghost" id="docCancel">Batal</button><span id="docFormMessage" role="status" aria-live="polite"></span></div>
+        </form>
+      </dialog>
+      <dialog id="cmsDialog" class="cms-dialog"><div class="cms-dialog-head"><div><span class="portal-kicker">KELOLA WEBSITE</span><h2 id="cmsTitle">Konten</h2></div><button type="button" id="cmsClose" class="btn ghost small" aria-label="Tutup">×</button></div>
+        <form id="cmsForm" class="cms-form"><input type="hidden" name="id"><input type="hidden" name="section"><label>Judul *<input name="judul" required maxlength="180"></label><label>Slug URL *<input name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="120"><small>Huruf kecil, angka, dan tanda hubung.</small></label><label class="cms-full">Deskripsi *<textarea name="deskripsi" required rows="4" maxlength="12000"></textarea></label><label class="cms-full">Lokasi<input name="lokasi" maxlength="250"></label>
+          <div class="cms-full cms-fields" data-cms-event><label>Tanggal mulai *<input type="date" name="tanggal_mulai" required></label><label>Tanggal selesai *<input type="date" name="tanggal_selesai" required></label></div>
+          <div class="cms-full cms-fields" data-cms-service><label class="cms-full">Jadwal rutin<textarea name="jadwal" rows="2" maxlength="500" placeholder="Hari · jam WIB"></textarea></label><label>Nama pembina<input name="nama_pembina" maxlength="180"></label><label>Jabatan pembina<input name="jabatan_pembina" maxlength="180"></label><label class="cms-full">Biografi pembina<textarea name="bio" rows="5" maxlength="12000"></textarea></label><label class="cms-full">Foto banner ibadah (JPG/PNG/WebP, maks. 10 MB)<input type="file" name="hero_file" accept="image/jpeg,image/png,image/webp"><img id="cmsHeroPreview" class="cms-preview" hidden alt="Banner saat ini"></label><label class="cms-check cms-full"><input type="checkbox" name="hapus_hero_path" value="1"> Hapus banner lama</label></div>
+          <label class="cms-full"><span id="cmsPhotoLabel">Foto / poster</span> (JPG/PNG/WebP, maks. 10 MB)<input type="file" name="foto_file" accept="image/jpeg,image/png,image/webp"><img id="cmsPhotoPreview" class="cms-preview" hidden alt="Foto saat ini"></label><label class="cms-check cms-full"><input type="checkbox" name="hapus_foto_path" value="1"> Hapus foto lama</label><label>Urutan<input type="number" name="urutan" min="0" max="9999" value="99" required></label><label>Status<select name="status"><option value="published">Publikasikan</option><option value="draft">Draft (tidak tampil)</option></select></label><p id="cmsFormMessage" class="cms-full" role="status" aria-live="polite"></p><div class="cms-full toolbar"><button type="submit" class="btn">Simpan konten</button><button type="button" class="btn ghost" id="cmsCancel">Batal</button></div></form>
+      </dialog>
+      <section id="section-users" class="admin-section">
+        <div class="section-head">
+          <div><p class="eyebrow">Hak Akses</p><h2>Akun Pengguna</h2></div>
+          <div class="toolbar"><button type="button" class="btn" data-open-modal="userModal" data-permission="users:create">Tambah Akun</button></div>
+        </div>
+        <div class="table-card"><table id="tableUsers"></table></div>
+      </section>
+
+      <section id="section-jemaat" class="admin-section">
+        <div class="section-head">
+          <div><p class="eyebrow">Master Data</p><h2>Data Jemaat</h2></div>
+          <div class="toolbar">
+            <div class="add-dropdown">
+              <button class="btn" id="toggleAddJemaat">+ Tambah Jemaat ▾</button>
+              <div class="add-dropdown-menu" id="menuAddJemaat">
+                <button data-open-modal="jemaatModal">✏️ Tambah Manual</button>
+                <div class="dropdown-divider"></div>
+                <label style="cursor:pointer">📂 Import dari Excel/CSV<input type="file" id="importJemaat" accept=".xlsx,.xls,.csv" hidden></label>
+                <a class="add-dropdown-menu" style="display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:14px;font-weight:700;color:var(--navy);text-decoration:none;" href="templates/template_jemaat.csv" download>📄 Download Template</a>
+              </div>
+            </div>
+            <button type="button" class="btn ghost" data-export="jemaat">Export CSV</button>
+            <button type="button" class="btn danger" id="deleteAllJemaat">Delete All</button>
+          </div>
+        </div>
+        <div class="table-tools"><input type="search" data-search="jemaat" placeholder="Cari nama, nomor WA, alamat..."><span class="muted" id="jemaatCount"></span></div>
+        <div class="table-card"><table id="tableJemaat"></table></div>
+      </section>
+
+      <section id="section-jadwal" class="admin-section">
+        <div class="section-head">
+          <div><p class="eyebrow">Pelayanan</p><h2>Jadwal Pelayanan</h2></div>
+          <div class="toolbar">
+            <div class="add-dropdown">
+              <button class="btn" id="toggleAddJadwal">+ Tambah Jadwal ▾</button>
+              <div class="add-dropdown-menu" id="menuAddJadwal">
+                <button data-open-modal="jadwalModal">✏️ Tambah Manual</button>
+                <div class="dropdown-divider"></div>
+                <label style="cursor:pointer">📂 Import dari Excel/CSV<input type="file" id="importJadwal" accept=".xlsx,.xls,.csv" hidden></label>
+                <a class="add-dropdown-menu" style="display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:14px;font-weight:700;color:var(--navy);text-decoration:none;" href="templates/template_pelayanan.csv" download>📄 Download Template</a>
+              </div>
+            </div>
+            <button type="button" class="btn ghost" data-export="jadwal">Export CSV</button>
+            <button type="button" class="btn danger" id="deleteAllJadwal">Delete All</button>
+          </div>
+        </div>
+        <div class="table-tools"><input type="search" data-search="jadwal" placeholder="Cari tanggal, jenis ibadah, pelayan..."><span class="muted" id="jadwalCount"></span></div>
+        <div class="table-card"><table id="tableJadwal"></table></div>
+      </section>
+
+      <section id="section-media" class="admin-section">
+        <div class="section-head">
+          <div><p class="eyebrow">Dokumentasi</p><h2>Media</h2></div>
+          <div class="toolbar"><button type="button" class="btn" data-open-modal="mediaModal">Upload Media</button></div>
+        </div>
+        <div class="import-hint"><div><strong>Media admin dan umum.</strong><p>Upload dari pengunjung masuk status pending. Admin bisa publish atau hapus.</p></div><span class="badge warning">Review</span></div>
+        <div class="table-card"><table id="tableMedia"></table></div>
+      </section>
+
+      <section id="section-terhubung" class="admin-section">
+        <div class="section-head"><div><p class="eyebrow">Komunikasi · Formulir Online</p><h2>Formulir Terhubung</h2><p>Permohonan jemaat yang dikirim melalui website publik.</p></div><div class="toolbar"><button type="button" class="btn ghost" id="refreshConnect">Muat ulang</button></div></div>
+        <div class="connect-private-note">Informasi bersifat pribadi. Gunakan hanya untuk tindak lanjut pastoral dan pelayanan sesuai persetujuan pengirim.</div>
+        <div class="table-tools connect-filters"><input type="search" id="connectSearch" placeholder="Cari nama, kontak, atau kota…"><select id="connectFilter" aria-label="Filter status"><option value="">Semua status</option><option value="baru">Baru</option><option value="diproses">Diproses</option><option value="selesai">Selesai</option></select><span id="connectCount" class="muted"></span></div>
+        <div class="table-card"><table id="tableConnect"></table></div>
+        <div class="gpi-connect-manager"><div class="section-head"><div><span class="portal-kicker">PENGELOLAAN OPSI</span><h2>Pilihan Formulir Online</h2><p>Tambah, edit, aktifkan atau nonaktifkan opsi di website Terhubung. Data pengajuan lama tetap tersimpan.</p></div></div>
+        <div id="connectCategoryList" class="gpi-connect-category-list"></div>
+        <form id="connectCategoryForm" class="gpi-inline-form">
+          <input type="hidden" name="id"><label>Kode unik (tidak boleh spasi)<input name="kode" required pattern="[a-z][a-z0-9_]{1,29}" maxlength="30" placeholder="misalnya: pelayanan"></label>
+          <label>Judul yang tampil<input name="label" required maxlength="160" placeholder="Misalnya: Melayani"></label>
+          <label>Deskripsi singkat<input name="description" required maxlength="500"></label>
+          <label>Pertanyaan lanjutan<input name="prompt" required maxlength="500"></label>
+          <label>Urutan<input name="urutan" type="number" min="0" max="9999" value="99"></label>
+          <label>Status<select name="aktif"><option value="1">Tampilkan</option><option value="0">Nonaktif</option></select></label>
+          <div class="gpi-inline-actions"><button class="btn" type="submit">Simpan pilihan</button><button class="btn ghost" type="reset" id="resetConnectCategory">Batal / Baru</button></div>
+        </form></div>
+        <dialog id="connectDialog" class="connect-dialog"><div class="connect-dialog-head"><div><span class="portal-kicker">DETAIL PERMOHONAN</span><h3 id="connectDialogTitle">Formulir Terhubung</h3></div><button type="button" class="btn ghost small" id="closeConnectDialog">Tutup</button></div><div id="connectDialogBody"></div><form id="connectUpdateForm"><label>Status<select name="status"><option value="baru">Baru</option><option value="diproses">Diproses</option><option value="selesai">Selesai</option></select></label><label>Catatan tindak lanjut internal<textarea name="catatan" maxlength="5000" rows="4"></textarea></label><button class="btn" type="submit">Simpan tindak lanjut</button></form></dialog>
+      </section>
+      <% if(permissions.pesan?.view){ %>
+      <section id="section-support" class="admin-section">
+        <div class="section-head"><div><p class="eyebrow">KOMUNIKASI LANGSUNG</p><h2>Chat Jemaat & Pusat Bantuan</h2><p>Balas pesan pengunjung dan kelola artikel Knowledge Base.</p></div><button class="btn ghost" id="supportAdminRefresh" type="button">Perbarui chat</button></div>
+        <div class="gpi-support-admin-grid">
+          <div class="table-card"><h3>Percakapan</h3><div id="supportAdminThreads" class="gpi-support-admin-list"></div></div>
+          <div class="table-card"><div id="supportAdminDetail"><p class="muted">Pilih percakapan di sebelah kiri.</p></div><div id="supportAdminMessages" class="gpi-support-admin-messages" aria-live="polite"></div>
+           <form id="supportAdminReply" hidden><label>Balasan admin<textarea name="pesan" rows="3" maxlength="4000" required placeholder="Tulis balasan untuk pengunjung"></textarea></label><button class="btn" type="submit">Kirim balasan</button><button class="btn ghost" id="supportAdminClose" type="button">Tandai selesai</button><p id="supportAdminMessage" role="status"></p></form></div>
+        </div>
+        <div class="table-card gpi-support-knowledge-admin"><div class="section-head"><h3>Knowledge Base Articles</h3><button id="supportArticleNew" class="btn ghost" type="button">+ Artikel baru</button></div>
+          <div id="supportAdminArticles"></div>
+          <form id="supportArticleForm" hidden><input type="hidden" name="id"><label>Judul<input name="title" maxlength="180" required></label><label>Kategori<input name="category" maxlength="80" required></label><label>Ringkasan<input name="summary" maxlength="360" required></label><label>Penjelasan<textarea name="body" rows="5" maxlength="12000" required></textarea></label><label>Link halaman internal<input name="link_path" placeholder="/terhubung"></label><label><input name="active" type="checkbox" checked> Tampilkan artikel di website</label><button type="submit" class="btn">Simpan artikel</button><button type="button" class="btn ghost" id="supportArticleCancel">Batal</button><p id="supportArticleMessage" role="status"></p></form>
+        </div>
+      </section>
+      <% } %>
+      <section id="section-pesan" class="admin-section">
+        <div class="section-head"><div><p class="eyebrow">Komunikasi</p><h2>Pesan Masuk</h2></div></div>
+        <div class="table-card"><table id="tablePesan"></table></div>
+      </section>
+
+      <section id="section-whatsapp" class="admin-section">
+        <div class="section-head">
+          <div><p class="eyebrow">WHATSAPP OTOMATIS</p><h2>Bot WhatsApp</h2><p>Hubungkan sekali, lalu pengumuman jadwal dan reminder H-1 dikirim otomatis oleh bot.</p></div>
+          <button class="btn ghost" id="waBotRefresh" type="button">Refresh Status</button>
+        </div>
+        <div class="wa-bot-grid">
+          <div class="table-card wa-bot-card">
+            <h3>1. Koneksi Bot</h3>
+            <p id="waBotStatus" class="wa-bot-status" aria-live="polite">Memuat status…</p>
+            <div id="waBotQrWrap" class="wa-bot-qr" hidden><img id="waBotQr" alt="QR untuk menautkan WhatsApp"><small>WhatsApp → Perangkat tertaut → Tautkan perangkat, lalu pindai QR ini.</small></div>
+            <button class="btn" id="waBotConnect" type="button">Hubungkan WhatsApp</button>
+          </div>
+          <div class="table-card wa-bot-card">
+            <h3>2. Grup Tujuan</h3>
+            <p class="muted">Pengumuman jadwal dikirim otomatis ke grup ini.</p>
+            <select id="waBotGroup"><option value="">Belum ada grup dipilih</option></select>
+            <div class="toolbar"><button class="btn ghost" id="waBotLoadGroups" type="button">Muat Daftar Grup</button><button class="btn" id="waBotSaveGroup" type="button">Simpan Grup</button></div>
+            <p class="muted" id="waBotGroupInfo"></p>
+            <h3>3. Uji Kirim</h3>
+            <input id="waBotTestPhone" inputmode="tel" placeholder="08xxxxxxxxxx">
+            <textarea id="waBotTestMessage" rows="2" maxlength="4096">Uji bot WhatsApp GPI Cipayung.</textarea>
+            <button class="btn ghost" id="waBotTest" type="button">Kirim Pesan Uji</button>
+          </div>
+        </div>
+        <div class="section-head wa-log-head"><div><h2>Riwayat Pengiriman</h2><p class="muted" id="waRealtimeStatus"></p></div></div>
+        <div class="table-card"><table id="tableWhatsapp"></table></div>
+      </section>
+
+
+      <section id="section-persembahan" class="admin-section">
+        <div class="section-head">
+          <div><p class="eyebrow">KEUANGAN · BUKU KAS</p><h2>Keuangan Gereja</h2><p>Catatan resmi persembahan, pemasukan/pengeluaran kas, dan janji iman.</p></div>
+          <div class="toolbar">
+            <div class="add-dropdown">
+              <button class="btn" id="toggleAddPersembahan" type="button">+ Tambah Persembahan ▾</button>
+              <div class="add-dropdown-menu" id="menuAddPersembahan">
+                <button type="button" data-open-modal="persembahanModal">✏️ Tambah Manual</button>
+                <label>📥 Import Excel/CSV<input type="file" id="importPersembahan" accept=".xlsx,.xls,.csv" hidden></label>
+              </div>
+            </div>
+            <a href="/api?action=export_keuangan_excel" class="btn ghost gpi-export-xlsx" data-permission="persembahan:export">Export Laporan Excel (.xlsx)</a>
+          </div>
+        </div>
+        <div class="gpi-finance-kpis" id="financeSummary" aria-live="polite"></div>
+        <div class="gpi-finance-filter"><label>Jenis transaksi<select id="financeTypeFilter"><option value="">Semua jenis</option><option>Persembahan</option><option>Kas</option><option>Janji Iman</option></select></label><label>Dari tanggal<input id="financeStartDate" type="date"></label><label>Sampai tanggal<input id="financeEndDate" type="date"></label><button id="financeClearFilter" type="button" class="btn ghost small">Reset filter</button></div>
+        <div class="import-hint"><div><strong>Audit transaksi keuangan.</strong><p>Setiap tambah, ubah dan hapus dicatat bersama identitas pengguna. Janji iman belum terealisasi tidak dihitung sebagai saldo kas.</p></div><span class="badge success">Database MySQL</span></div>
+        <div class="table-card"><table id="tablePersembahan"></table></div>
+      </section>
+
+      <section id="section-tim-pelayan" class="admin-section">
+        <div class="section-head">
+          <div><p class="eyebrow">Struktur Pelayanan</p><h2>Tim Pelayan Gereja</h2></div>
+          <div class="toolbar"><button type="button" class="btn" data-open-modal="timPelayanModal">Tambah Tim Pelayan</button><button type="button" class="btn ghost" data-export="tim_pelayan">Export CSV</button></div>
+        </div>
+        <div class="table-card"><table id="tableTimPelayan"></table></div>
+      </section>
+
+
+      <section id="section-pendalaman-alkitab" class="admin-section">
+        <div class="section-head">
+          <div><p class="eyebrow">Materi Rohani</p><h2>Pendalaman Alkitab</h2></div>
+          <div class="toolbar"><button type="button" class="btn" data-open-modal="pendalaman_alkitabModal">Tambah Materi</button><button type="button" class="btn ghost" data-export="pendalaman_alkitab">Export CSV</button></div>
+        </div>
+        <div class="import-hint"><div><strong>Konten Pendalaman Alkitab.</strong><p>Tambahkan cerita Alkitab, renungan, materi animasi anak, foto kegiatan, dan bahan rohani Kristen yang tampil di halaman Pendalaman Alkitab.</p></div><span class="badge success">Public Sync</span></div>
+        <div class="table-card"><table id="tablePendalamanAlkitab"></table></div>
+      </section>
+
+          </main>
+  </div>
+
+
+  <div class="modal" id="userModal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal>×</button>
+      <h2>Form Akun Pengguna</h2>
+      <form class="form" data-form="user">
+        <input type="hidden" name="id">
+        <label>Nama Lengkap<input name="nama_lengkap" required></label>
+        <label>Username<input name="username" autocomplete="off" required></label>
+        <label>Email<input type="email" name="email"></label>
+        <label>Role / Aktor
+          <select name="role" required>
+            <option value="admin">Admin</option>
+            <option value="majelis">Majelis / Pengurus</option>
+            <option value="pendeta">Pendeta</option>
+          </select>
+        </label>
+        <label>Status<select name="status"><option value="aktif">Aktif</option><option value="nonaktif">Nonaktif</option></select></label>
+        <label>Password<input name="password" type="password" placeholder="Isi untuk akun baru / ganti password"></label>
+        <button class="btn full" type="submit">Simpan Akun</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="jemaatModal" aria-hidden="true">
+    <div class="modal-card large">
+      <button class="modal-close" data-close-modal>×</button>
+      <h2>Form Data Jemaat</h2>
+      <form class="form grid-form" data-form="jemaat">
+        <input type="hidden" name="id">
+        <label>No. Urut<input name="nomor_urut" inputmode="numeric"></label>
+        <label>Nama Keluarga<input name="nama_keluarga"></label>
+        <label>Nama Lengkap / Anggota Keluarga<input name="nama_lengkap" required></label>
+        <label>Jenis Kelamin<select name="jenis_kelamin"><option value="">-</option><option>Laki-laki</option><option>Perempuan</option></select></label>
+        <label>Tempat Lahir<input name="tempat_lahir"></label>
+        <label>Tanggal Lahir<input type="date" name="tanggal_lahir"></label>
+        <label>No. HP<input name="no_hp"></label>
+        <label>WhatsApp<input name="whatsapp"></label>
+        <label>Email<input type="email" name="email"></label>
+        <label>Status Jemaat<select name="status_jemaat"><option>Aktif</option><option>Nonaktif</option><option>Pindah</option><option>Meninggal</option></select></label>
+        <label>Status Keluarga<input name="status_keluarga" placeholder="Kepala Keluarga / Istri / Anak Pertama"></label>
+        <label>Tanggal Bergabung<input type="date" name="tanggal_bergabung"></label>
+        <label class="full">Alamat<textarea name="alamat"></textarea></label>
+        <label class="full">Catatan<textarea name="catatan"></textarea></label>
+        <button class="btn full" type="submit">Simpan Data Jemaat</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="jadwalModal" aria-hidden="true">
+    <div class="modal-card large">
+      <button class="modal-close" data-close-modal>×</button>
+      <h2>Form Jadwal Pelayanan</h2>
+      <form class="form grid-form" data-form="jadwal">
+        <input type="hidden" name="id">
+        <label>Tanggal<input type="date" name="tanggal" required></label>
+        <label>Hari<input name="hari" placeholder="Otomatis jika kosong"></label>
+        <label>Jenis Ibadah<input name="jenis_ibadah" required></label>
+        <label>Jam Mulai<input type="time" name="jam_mulai"></label>
+        <label>Jam Selesai<input type="time" name="jam_selesai"></label>
+        <label>Lokasi<input name="lokasi" value="GPI Cipayung"></label>
+        <label class="full">Tema<input name="tema"></label>
+        <label>Pemimpin Pujian / WL<input name="pemimpin_pujian"></label>
+        <label>Singer<input name="singer"></label>
+        <label>Pemain Musik<input name="pemain_musik"></label>
+        <label>Pengkhotbah / Firman<input name="pengkhotbah"></label>
+        <label>Liturgis<input name="liturgis"></label>
+        <label>Multimedia<input name="multimedia"></label>
+        <label>Usher<input name="usher"></label>
+        <label>Kolektan<input name="kolektan"></label>
+        <label>Status<select name="status"><option value="published">Published</option><option value="draft">Draft</option><option value="batal">Batal</option></select></label>
+        <label class="full">Catatan<textarea name="catatan"></textarea></label>
+        <button class="btn full" type="submit">Simpan Jadwal</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="pengumumanModal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal>×</button>
+      <h2>Form Warta Gereja</h2>
+      <form class="form" data-form="pengumuman">
+        <input type="hidden" name="id">
+        <label>Judul<input name="judul" required></label><label>Kategori Warta<select name="kategori_warta"><option>Umum</option><option>Pelayanan</option><option>Ulang Tahun</option><option>Kegiatan</option><option>Pengumuman</option></select></label><label>Unggah foto / video<input name="warta_file" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm"><small class="field-help">Foto maksimal 10 MB; video MP4/WebM maksimal 1 GB (1024 MB). Direkomendasikan ukuran 100–300 MB untuk video 5–10 menit. Jangan tutup tab saat mengunggah.</small></label><label class="gpi-media-remove"><input name="hapus_media" type="checkbox" value="1"> Hapus media lama</label><p id="currentWartaMedia" class="muted"></p>
+        <label>Tanggal Publish<input type="date" name="tanggal_publish"></label>
+        <label>Status<select name="status"><option value="published">Published</option><option value="draft">Draft</option></select></label>
+        <label>Isi<textarea name="isi" required></textarea></label>
+        <div id="wartaUploadStatus" class="warta-upload-status" role="status" aria-live="polite" hidden><label for="wartaUploadProgress">Mengunggah video… <span id="wartaUploadPercent">0%</span></label><progress id="wartaUploadProgress" max="100" value="0"></progress><small>Jangan menutup tab selama proses unggah.</small></div><button class="btn full" type="submit">Simpan Pengumuman</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="mediaModal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal>×</button>
+      <h2>Upload Media</h2>
+      <form class="form" data-form="media" enctype="multipart/form-data">
+        <label>Judul album / kegiatan<input name="judul" required placeholder="Contoh: Ibadah Raya Minggu"></label>
+        <label>File Media<input type="file" name="files[]" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" multiple required><small class="field-help">Pilih satu atau beberapa foto/video di sini (tanpa kolom upload duplikat). Foto maksimum 10 MB, video 30 MB. Setiap file akan tersimpan sebagai item media terpisah dengan judul kegiatan yang sama.</small></label>
+        <label>Status<select name="status"><option value="published">Published</option><option value="pending">Pending</option><option value="draft">Draft</option></select></label>
+        <label>Deskripsi<textarea name="deskripsi"></textarea></label>
+        <button class="btn full" type="submit">Upload Media</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="replyModal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal>×</button>
+      <h2>Balas Pesan</h2>
+      <form class="form" data-form="reply">
+        <input type="hidden" name="id">
+        <label>Balasan<textarea name="balasan" required></textarea></label>
+        <button class="btn full" type="submit">Simpan Balasan</button>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="modal" id="persembahanModal" aria-hidden="true">
+    <div class="modal-card large">
+      <button class="modal-close" data-close-modal>×</button>
+      <h2>Form Transaksi Keuangan Gereja</h2>
+      <form class="form grid-form" data-form="persembahan">
+        <input type="hidden" name="id">
+        <label>Tanggal<input type="date" name="tanggal" required></label>
+        <label>Nomor Bukti / Referensi<input name="nomor_bukti" maxlength="70" placeholder="KAS-2026-001"></label>
+        <label>Jenis Transaksi<select name="jenis_transaksi" id="financeTransactionType"><option>Persembahan</option><option>Kas</option><option>Janji Iman</option></select></label>
+        <label>Arah Kas<select name="arus_kas" id="financeCashDirection"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran (khusus Kas)</option></select></label>
+        <label>Status Janji Iman<select name="status_janji" id="financePledgeStatus"><option value="realisasi">Sudah diterima / terealisasi</option><option value="janji">Janji belum terealisasi</option></select></label>
+        <label>Kategori Dana<select name="kategori_dana"><option>Keuangan Gereja</option><option>Kaum Ibu</option><option>Revive Generation</option><option>Sekolah Minggu</option><option>Diakonia</option><option>Persembahan</option></select></label>
+        <label>Jenis Ibadah<input name="jenis_ibadah" placeholder="Ibadah Minggu Raya"></label>
+        <label>Jenis Persembahan<select name="jenis_persembahan"><option>Persembahan Umum</option><option>Perpuluhan</option><option>Persembahan Khusus</option><option>Diakonia</option><option>Pembangunan</option><option>Janji Iman</option><option>Kas Masuk</option><option>Kas Keluar</option></select></label>
+        <label>Jumlah Rp<input type="number" name="jumlah" min="0.01" step="0.01" required></label>
+        <label>Kolektan<input name="kolektan"></label>
+        <label>Metode Pembayaran<select name="metode_pembayaran"><option value="">Pilih metode</option><option>Tunai</option><option>Transfer Bank</option><option>QRIS</option><option>Lainnya</option></select></label>
+        <label>Penanggung Jawab<input name="penanggung_jawab" placeholder="Bendahara / petugas"></label>
+        <label>Nama Pemberi / Identitas (opsional)<input name="nama_pemberi"></label>
+        <label class="full">Keterangan<textarea name="keterangan"></textarea></label>
+        <button class="btn full" type="submit">Simpan Transaksi Keuangan</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="timPelayanModal" aria-hidden="true">
+    <div class="modal-card large">
+      <button class="modal-close" data-close-modal>×</button>
+      <h2>Form Tim Pelayan</h2>
+      <form class="form grid-form" data-form="tim_pelayan">
+        <input type="hidden" name="id">
+        <label>Nama dari Data Jemaat
+          <input name="nama_lengkap" list="jemaatNameList" placeholder="Ketik/pilih nama jemaat" required>
+          <datalist id="jemaatNameList"></datalist>
+        </label>
+        <label>Kategori
+          <select name="kategori" required>
+            <option value="musik">Tim Musik</option>
+            <option value="singer">Singers</option>
+            <option value="pelayanan_gereja">Tim Pelayanan Gereja</option>
+            <option value="diakonia">Diakonia Gereja</option>
+            <option value="media">Media Gereja</option>
+            <option value="sekolah_minggu">Sekolah Minggu</option>
+            <option value="kaum_ibu">Kaum Ibu</option>
+            <option value="pemuda">Revive Generation</option>
+          </select>
+        </label>
+        <label>Tim / Bagian
+          <select name="tim" id="timBagianSelect" required>
+            <option value="">Pilih kategori terlebih dahulu</option>
+          </select>
+        </label>
+        <label>Jabatan / Peran
+          <select name="jabatan" id="jabatanPeranSelect" required>
+            <option value="">Pilih kategori terlebih dahulu</option>
+          </select>
+        </label>
+        <label>Urutan<input type="number" name="urutan" value="99" min="1"></label>
+        <label>Status<select name="status"><option value="published">Published</option><option value="draft">Draft</option></select></label>
+        <label>Upload Foto
+          <input type="file" name="foto_file" accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.tif,.tiff,.heic,.heif,.avif">
+          <small class="field-help">Mendukung hampir semua file foto umum (JPG/JPEG/PNG/WEBP/GIF/BMP/TIFF/HEIC/HEIF/AVIF). Setelah memilih foto, geser dan zoom posisi wajah jika preview tersedia.</small>
+          <div class="team-upload-buttons">
+            <button class="btn ghost small" type="button" id="teamPhotoRemoveBtn">Hapus Foto</button>
+          </div>
+        </label>
+        <input type="hidden" name="foto_path">
+        <input type="hidden" name="hapus_foto" value="0">
+        <input type="hidden" name="foto_cropped_data">
+        <div class="team-upload-preview full" id="teamUploadPreview" aria-live="polite">
+          <div class="team-upload-summary">
+            <div class="team-upload-preview-box"><span>Preview foto</span></div>
+            <p>Pilih foto, lalu geser dan zoom langsung di area bawah ini. Hasil posisi foto akan ikut tersimpan saat klik <strong>Simpan Tim Pelayan</strong>.</p>
+          </div>
+          <div class="team-crop-inline" id="teamCropInline" hidden>
+            <div class="crop-workspace inline-crop-workspace">
+              <div class="crop-stage crop-stage-inline" id="teamCropStage">
+                <img id="teamCropImage" alt="Preview crop foto" draggable="false">
+                <div class="crop-mask"></div>
+                <div class="crop-circle"></div>
+              </div>
+              <div class="crop-preview-wrap inline-preview-wrap">
+                <span>Preview akhir</span>
+                <canvas id="teamCropPreview" width="180" height="180"></canvas>
+              </div>
+            </div>
+            <label class="crop-range">Zoom Foto
+              <input type="range" id="teamCropZoom" min="1" max="3" step="0.01" value="1">
+            </label>
+            <div class="crop-actions inline-crop-actions">
+              <button class="btn ghost" type="button" id="teamCropReset">Reset Posisi</button>
+              <button class="btn" type="button" id="teamCropApply">Gunakan Posisi Foto</button>
+            </div>
+          </div>
+        </div>
+        <label class="full">Deskripsi<textarea name="deskripsi" placeholder="Catatan singkat pelayanan"></textarea></label>
+        <button class="btn full" type="submit">Simpan Tim Pelayan</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="pendalaman_alkitabModal" aria-hidden="true">
+    <div class="modal-card large">
+      <button class="modal-close" data-close-modal>×</button>
+      <h2>Form Pendalaman Alkitab</h2>
+      <form class="form grid-form" data-form="pendalaman_alkitab" enctype="multipart/form-data">
+        <input type="hidden" name="id">
+        <label>Judul Materi<input name="judul" required placeholder="Contoh: Daniel Tetap Setia Berdoa"></label>
+        <label>Tipe Konten
+          <select name="tipe">
+            <option value="Cerita Alkitab">Cerita Alkitab</option>
+            <option value="Renungan">Renungan</option>
+            <option value="Animasi / Materi Anak">Animasi / Materi Anak</option>
+            <option value="Foto">Foto</option>
+            <option value="Video">Video</option>
+          </select>
+        </label>
+        <label>Ayat Alkitab<input name="ayat" placeholder="Contoh: Daniel 6:10"></label>
+        <label>Urutan<input type="number" name="urutan" value="99" min="1"></label>
+        <label>Upload Foto/Video<input type="file" name="media_file" accept="image/*,video/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.heic,.heif,.avif,.mp4,.webm,.mov"><small class="field-help">Untuk foto/video materi Pendalaman Alkitab. Bisa juga memakai link YouTube/media pada kolom di samping.</small></label>
+        <label>Link Video/Media<input name="media_link" placeholder="https://youtube.com/... atau link media lain"></label>
+        <input type="hidden" name="media_path">
+        <label>Status
+          <select name="status">
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+        </label>
+        <label class="full">Isi Cerita / Renungan<textarea name="isi" required placeholder="Tulis isi materi rohani, cerita Alkitab, renungan, atau deskripsi media."></textarea></label>
+        <button class="btn full" type="submit">Simpan Materi Pendalaman Alkitab</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="announcementModal" aria-hidden="true">
+    <div class="modal-card large">
+      <button class="modal-close" data-close-modal>×</button>
+      <h2>Kirim Pengumuman WhatsApp</h2>
+      <p class="muted" id="announcementSummary">Pengumuman dikirim otomatis oleh bot ke grup tujuan dan nomor pelayan yang tercatat.</p>
+      <textarea id="announcementText" class="copy-box" readonly></textarea>
+      <div id="announcementTargets" class="wa-links"></div>
+      <div class="toolbar"><button class="btn" id="sendAnnouncement" type="button">Kirim Otomatis</button><button class="btn ghost" type="button" data-close-modal>Batal</button></div>
+      <div id="announcementResult" class="wa-links" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+<script id="adminInitialData" type="application/json"><%- safeJSON(initialData) %></script>
+<script id="appPermissions" type="application/json"><%- safeJSON(permissions) %></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="assets/js/admin.js?v=<%- e(assetJs) %>"></script>
+<script src="/assets/js/admin-content.js?v=4"></script><script src="/assets/js/admin-documentation.js?v=5"></script><script src="/assets/js/admin-revisi.js?v=1"></script><script src="/assets/js/support-admin.js?v=2"></script>
+</body>
+</html>

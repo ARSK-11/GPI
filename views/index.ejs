@@ -1,0 +1,28 @@
+<%- public_head("GPI Cipayung — Selamat Datang", s) %>
+<body class="refresh-home">
+<%- public_header(s, 'beranda') %>
+<main id="main-content">
+  <header class="welcome-hero">
+    <div class="welcome-visual" aria-hidden="true"></div>
+    <div class="container welcome-inner">
+      <span class="eyebrow">Gereja Pentakosta Indonesia · Sidang Cipayung</span>
+      <h1 class="gpi-script-heading">Welcome <em>Home</em></h1>
+      <p>Rumah untuk beribadah, bertumbuh dalam iman, dan melayani bersama.</p>
+      <div class="welcome-actions"><a class="refresh-button light" href="/jadwal-ibadah">Temukan Ibadah <span>↗</span></a><a class="refresh-button outline" href="/tentang">Kenali Kami</a></div>
+    </div>
+    <a href="#ibadah" class="welcome-scroll">JELAJAHI GEREJA KAMI <span>↓</span></a>
+    <span class="visual-credit">GPI Cipayung · Ibadah dan Persekutuan</span>
+  </header>
+  <div class="f4-marquee" data-marquee><div class="f4-marquee-track"><% for(let j=0;j<2;j++){ %><div class="f4-marquee-group" <%- j?'aria-hidden="true"':'' %>><% for(let i=0;i<4;i++){ %><span>BERIBADAH · BERTUMBUH · MELAYANI <b aria-hidden="true">—</b></span><% } %></div><% } %></div><button class="f4-motion-toggle" type="button" aria-label="Jeda animasi tulisan" aria-pressed="false">Ⅱ</button></div>
+  <section class="refresh-section f4-events" id="acara"><div class="container"><div class="refresh-section-head"><div><span class="eyebrow">Berkumpul dan merayakan</span><h2>Acara kita.</h2></div><div class="f4-event-controls"><button type="button" data-event-prev aria-label="Acara sebelumnya">‹</button><button type="button" data-event-next aria-label="Acara berikutnya">›</button></div></div><div class="f4-event-rail" data-event-rail><% (data.acara||[]).forEach(r=>{ %><a class="f4-event-card" href="/acara-<%- pv_esc(r.slug) %>"><div class="f4-event-image"><% if(contentImage(r.foto_path)){ %><img src="<%- pv_esc(contentImage(r.foto_path)) %>" alt="Poster <%- pv_esc(r.judul) %>" loading="lazy"><% }else{ %><span>GPI CIPAYUNG · ACARA</span><% } %></div><div class="f4-event-body"><h3><%- pv_esc(r.judul) %></h3><p><%- pv_esc(r.deskripsi) %></p><div class="f4-event-meta"><span><%- pv_esc(contentDate(r.tanggal_mulai,r.tanggal_selesai)) %></span><span aria-hidden="true">↗</span></div><small><%- pv_esc(r.lokasi) %></small></div></a><% }); %><% if(!(data.acara||[]).length){ %><div class="f4-event-empty">Belum ada acara yang dipublikasikan.</div><% } %></div></div></section>
+  <section class="f4-about-cover"><div class="container"><img src="/assets/img/logo-gpi-cipayung.jpg" alt="Logo GPI Cipayung" width="98" height="98" loading="lazy"><span class="eyebrow">Gereja Pentakosta Indonesia · Sidang Cipayung</span><h2>GPI Cipayung.</h2><p>Gereja Pentakosta Indonesia Sidang Cipayung adalah keluarga rohani yang bertumbuh bersama dalam kasih Tuhan. Kami rindu menjadi tempat bagi setiap generasi untuk beribadah, mengenal Firman, membangun persekutuan, dan melayani bersama.</p><a class="refresh-button outline" href="/tentang">Mengenal gereja kami ↗</a><small>Ilustrasi suasana ibadah</small></div></section>
+  <section class="refresh-section" id="ibadah"><div class="container">
+    <div class="refresh-section-head"><div><span class="eyebrow">Bersama dalam iman</span><h2>Mari beribadah.</h2></div><a class="text-link" href="/jadwal-ibadah">Semua jadwal ↗</a></div>
+    <div class="worship-grid"><div class="schedule-feature"><span class="eyebrow">Jadwal terdekat</span><%- home_schedule_preview(nextSchedules) %></div><%- prayerCard() %></div>
+  </div></section>
+  <section class="refresh-section"><div class="container"><div class="refresh-section-head"><div><span class="eyebrow">Gunakan talentamu</span><h2>Temukan pelayananmu.</h2></div><a class="text-link" href="/pelayanan">Semua pelayanan ↗</a></div><div class="ministry-home-grid"><% ministryTabs(data.pelayanan).slice(0,6).forEach((m,i)=>{ %><a class="ministry-home-card" href="<%- pv_esc(m.href === '#' ? '/pelayanan' : '/'+m.href) %>"><span class="ministry-num">0<%- i+1 %></span><h3><%- pv_esc(m.name) %></h3><p><%- pv_esc(m.description) %></p><span class="ministry-arrow">↗</span></a><% }); %></div></div></section>
+  <section class="refresh-section news-section"><div class="container"><div class="refresh-section-head"><div><span class="eyebrow">Kabar dari gereja</span><h2>Warta terkini.</h2></div><a class="text-link" href="/warta">Baca semua warta ↗</a></div><div class="announcement-grid"><%- render_pengumuman(data.pengumuman.slice(0,3)) %></div></div></section>
+  <section class="refresh-section"><div class="container"><div class="refresh-section-head"><div><span class="eyebrow">Dokumentasi</span><h2>Momen bersama.</h2></div><a class="text-link" href="/media">Lihat galeri ↗</a></div><div class="media-album-list" id="homeMedia"><%- render_media(data.media.slice(0,3)) %></div></div></section>
+  <section class="giving-banner"><div class="container"><div><span class="eyebrow">Memberi dengan sukacita</span><h2>Jadilah bagian dari<br>pekerjaan Tuhan.</h2><p>Persembahan, perpuluhan, dan dukungan pembangunan gereja.</p></div><a class="refresh-button light" href="/memberi">Informasi persembahan ↗</a></div></section>
+</main>
+<%- public_footer(s) %>

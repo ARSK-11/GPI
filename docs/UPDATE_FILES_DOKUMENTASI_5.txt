@@ -1,0 +1,21 @@
+Paket perbaikan GPI Cipayung Fresh 5 • Dokumentasi Ibadah
+- server.js
+- app/api.js
+- app/repository.js
+- app/public-view.js
+- app/website-content.js
+- app/website-documentation.js
+- app/drive-gallery.js
+- assets/js/admin.js
+- assets/js/admin-content.js
+- assets/js/admin-documentation.js
+- assets/js/website-docs.js
+- assets/css/website-docs.css
+- views/admin.ejs
+- views/ibadah-detail.ejs
+- database/migration_website_documentation.sql
+- test/website-documentation.test.js
+- .env.example (contoh, TIDAK menimpa .env)
+- PANDUAN_DOKUMENTASI_FRESH_5.md
+
+Tidak disertakan dalam paket update: .env, node_modules, unggahan lama, SQL database utama.

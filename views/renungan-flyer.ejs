@@ -1,0 +1,14 @@
+<%- public_head('Renungan Firman Tuhan & Flyer Ibadah — GPI Cipayung',s) %>
+<body class="rohani-public-page">
+<% const visiblePosts = typeof posts === 'undefined' ? [] : posts; const visibleKinds = typeof kinds === 'undefined' ? {} : kinds; %>
+<%- public_header(s,'rohani') %>
+<main id="main-content">
+<header class="rohani-hero"><div class="container"><span class="eyebrow">FIRMAN TUHAN &amp; JADWAL IBADAH</span><h1>Renungan dan<br><em>Flyer Ibadah.</em></h1><p>Materi Firman Tuhan dan informasi pelayanan GPI Cipayung yang dapat dibuka melalui Google Drive maupun YouTube.</p></div></header>
+<section class="rohani-public-section"><div class="container">
+<div class="rohani-section-heading"><div><span class="eyebrow">DIPUBLIKASIKAN GPI CIPAYUNG</span><h2>Materi terbaru</h2></div><div><label for="rohaniFilter">Pilih kategori</label><select id="rohaniFilter"><option value="">Semua kategori</option><% Object.entries(visibleKinds).forEach(([key,label])=>{ %><option value="<%- pv_esc(key) %>"><%- pv_esc(label) %></option><% }) %></select></div></div>
+<% if(visiblePosts.length){ %><div class="rohani-grid" id="rohaniGrid"><% visiblePosts.forEach(r=>{ %><div data-rohani-kind="<%- pv_esc(r.jenis) %>"><%- rohaniCard(r) %></div><% }) %></div><p id="rohaniEmpty" hidden>Belum ada materi pada kategori ini.</p><% }else{ %><div class="rohani-empty">Belum ada renungan atau flyer yang dipublikasikan. Silakan kembali lagi untuk melihat materi baru.</div><% } %>
+<div class="rohani-subscribe-note"><h3>Ingin menerima informasi lewat WhatsApp?</h3><p>Hubungi kontak resmi gereja untuk berlangganan. Anda juga dapat mengirim pesan <strong>DAFTAR</strong> ke nomor WhatsApp Business gereja yang sudah dikonfigurasi. Balas <strong>STOP</strong> kapan saja untuk berhenti.</p></div>
+</div></section>
+</main>
+<script>document.addEventListener('DOMContentLoaded',()=>{const f=document.getElementById('rohaniFilter');f?.addEventListener('change',()=>{let count=0;document.querySelectorAll('[data-rohani-kind]').forEach(el=>{el.hidden=Boolean(f.value&&el.dataset.rohaniKind!==f.value);if(!el.hidden)count++;});const empty=document.getElementById('rohaniEmpty');if(empty)empty.hidden=count>0;});});</script>
+<%- public_footer(s) %>

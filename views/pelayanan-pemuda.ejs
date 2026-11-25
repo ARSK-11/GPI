@@ -1,0 +1,34 @@
+<%- public_head("Revive Generation — GPI Cipayung", s) %>
+<body class="team-page organization-page pemuda-page">
+<%- public_header(s, 'pelayanan') %>
+
+<header class="page-hero team-hero"><div class="container">
+  <div>
+    <span class="label">Organisasi Pelayanan</span>
+    <h1>Revive Generation</h1>
+    <p>Struktur pelayanan Revive Generation GPI Cipayung untuk membina generasi muda dalam iman, karakter, kerohanian, dan kebersamaan pelayanan gereja.</p>
+  </div>
+  <img data-logo-gereja src="<%- pv_esc(pv_logo(s)) %>" alt="Logo <%- pv_esc(s['nama_gereja']) %>">
+</div></header>
+
+<div class="breadcrumb-row"><div class="container"><a href="/">Beranda</a> / <a href="pelayanan">Pelayanan</a> / Revive Generation</div></div>
+
+<section class="section org-section"><div class="container">
+  <div class="section-center"><span class="label">Struktur Revive Generation</span><h2>Organisasi Revive Generation</h2><div class="divider"></div>
+    <p class="lead">BPH Revive Generation <strong>Tim Pelayan</strong> Periode <strong>2024-2027</strong>.</p></div>
+
+  <div class="org-flow">
+    <%- renderRole('Pembina', 'top') %>
+    <%- renderRole('Ketua') %>
+    <div class="org-two-cols">
+      <%- renderRole('Sekretaris') %>
+      <%- renderRole('Bendahara') %>
+    </div>
+    <%- renderRole('Kerohanian') %>
+    <%- renderRole('Humas', 'wide') %>
+  </div>
+</div></section>
+
+<div class="back-cta"><a class="btn" href="pelayanan">← Kembali ke Bidang Pelayanan</a></div>
+
+<%- public_footer(s) %>

@@ -1,0 +1,11 @@
+<%- public_head("Pelayanan — GPI Cipayung", s) %>
+<body>
+<%- public_header(s, 'pelayanan') %>
+<main id="main-content">
+<header class="refresh-page-hero"><div class="container"><span class="eyebrow">Bertumbuh & melayani</span><h1>Pelayanan.</h1><p>Temukan kesempatan untuk menggunakan talenta yang Tuhan percayakan, melayani sesama, dan bertumbuh bersama.</p></div></header>
+<section class="refresh-section"><div class="container"><div class="refresh-section-head"><div><span class="eyebrow">Pelayanan kami</span><h2>Temukan tempatmu.</h2></div></div><% const ministries=ministryTabs(data.pelayanan); %>
+<% if(ministries.length){ %><div class="ministry-tabs" aria-label="Pilih bidang pelayanan"><% ministries.forEach((m,i)=>{ %><a class="ministry-tab<%- i===0?' selected':'' %>" href="#ministry-<%- i %>" data-ministry-tab="<%- i %>"><%- pv_esc(m.name) %></a><% }); %></div>
+<div class="ministry-panels"><% ministries.forEach((m,i)=>{ %><article class="ministry-panel" id="ministry-<%- i %>"><div class="ministry-panel-art" aria-hidden="true"><span><%- String(i+1).padStart(2,'0') %></span><span class="ministry-art-cross">✦</span></div><div class="ministry-panel-copy"><span class="eyebrow">Bidang pelayanan</span><h2><%- pv_esc(m.name) %></h2><p><%- pv_esc(m.description) %></p><a class="refresh-button" href="<%- pv_esc(m.href==='#'?'/kontak':'/'+m.href) %>">Lihat detail pelayanan ↗</a></div></article><% }); %></div><% }else{ %><p>Belum ada bidang pelayanan yang dipublikasikan.</p><% } %></div></section>
+<section class="giving-banner"><div class="container"><div><span class="eyebrow">Mari terhubung</span><h2>Rindu untuk melayani?</h2><p>Hubungi pengurus gereja untuk informasi pelayanan.</p></div><a class="refresh-button light" href="/kontak">Hubungi kami ↗</a></div></section>
+</main>
+<%- public_footer(s) %>

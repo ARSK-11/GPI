@@ -1,0 +1,47 @@
+
+.gpi-admin-warta,.gpi-connect-manager{margin-top:38px;padding:27px;border:1px solid #dbe5ee;border-radius:15px;background:#fff}
+.gpi-admin-warta .section-head{flex-wrap:wrap}
+.gpi-connect-category-list{display:grid;gap:10px;margin:18px 0}
+.gpi-connect-cat{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;gap:14px;border:1px solid #dfe7ee;border-radius:12px;padding:14px 16px;background:#f8fbfd}
+.gpi-connect-cat.inactive{opacity:.65}
+.gpi-connect-cat strong{display:block;font-size:15px;color:#173d59}
+.gpi-connect-cat small{display:block;font-size:12px;color:#64748b;line-height:1.7;margin-top:5px}
+.gpi-connect-cat>span{font-size:12px;color:#375f79;font-weight:700}
+.gpi-inline-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;padding:20px;background:#f6f9fc;border-radius:12px}
+.gpi-inline-form label,.gpi-finance-filter label{display:grid;gap:7px;color:#31465c;font-weight:750;font-size:13px}
+.gpi-inline-form input,.gpi-inline-form select,.gpi-finance-filter input,.gpi-finance-filter select{width:100%;min-width:0;border:1px solid #cfdae4;border-radius:9px;padding:12px;background:white;font:inherit;color:#102b42}
+.gpi-inline-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.gpi-finance-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0}
+.gpi-finance-kpi{padding:22px;background:white;border:1px solid #dce4ea;border-radius:13px;min-width:0}
+.gpi-finance-kpi.main{background:#17507a;color:#fff}
+.gpi-finance-kpi small{display:block;font-size:12px;font-weight:750;opacity:.8;margin-bottom:10px}
+.gpi-finance-kpi strong{display:block;font-size:clamp(17px,1.7vw,27px);font-weight:900;overflow-wrap:anywhere;line-height:1.3}
+.gpi-finance-filter{display:flex;align-items:end;gap:14px;flex-wrap:wrap;margin:20px 0}
+.gpi-finance-filter label{flex:1;min-width:175px;max-width:300px}
+.gpi-media-remove{display:flex!important;align-items:center;gap:10px}
+.gpi-media-remove input{width:auto!important}
+.gpi-export-xlsx{white-space:nowrap}
+@media(max-width:980px){.gpi-finance-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.gpi-inline-form{grid-template-columns:1fr}.gpi-connect-cat{grid-template-columns:1fr auto auto}.gpi-connect-cat>span{grid-column:1/-1}}
+@media(max-width:580px){.gpi-finance-kpis{grid-template-columns:1fr}.gpi-connect-manager,.gpi-admin-warta{padding:15px}.gpi-connect-cat{gap:8px}.gpi-connect-cat .btn{font-size:12px}}
+
+/* Bot WhatsApp otomatis */
+.wa-bot-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.wa-bot-card{display:grid;gap:12px;align-content:start;padding:22px}
+.wa-bot-card h3{margin:0;color:#173d59;font-size:16px}
+.wa-bot-card input,.wa-bot-card select,.wa-bot-card textarea{width:100%;border:1px solid #cfdae4;border-radius:9px;padding:11px 12px;font:inherit;background:#fff}
+.wa-bot-status{padding:12px 14px;border-radius:10px;background:#f1f5f9;color:#31465c;font-weight:700}
+.wa-bot-status.ready{background:#e7f7ee;color:#17653b}
+.wa-bot-status.qr,.wa-bot-status.starting{background:#fff7e6;color:#8a5a00}
+.wa-bot-status.error{background:#fdecec;color:#9f1d1d}
+.wa-bot-qr{display:grid;justify-items:center;gap:8px;padding:14px;background:#fff;border:1px dashed #b9c9d7;border-radius:12px}
+.wa-bot-qr img{width:min(300px,100%);height:auto;image-rendering:pixelated}
+.wa-bot-qr small{color:#64748b;text-align:center;line-height:1.6}
+.wa-log-head{margin-top:30px}
+.wa-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.wa-chip{display:inline-block;padding:7px 11px;border-radius:999px;background:#eef4f9;color:#244a66;font-size:12px;font-weight:700}
+.wa-result{display:grid;gap:2px;width:100%;padding:10px 12px;border-radius:9px;background:#f6f9fc;border-left:4px solid #94a3b8}
+.wa-result.ok{border-left-color:#1f9d55;background:#f0fbf4}
+.wa-result.fail{border-left-color:#d64545;background:#fdf1f1}
+.wa-result span,.wa-result small{color:#64748b;font-size:12px}
+.wa-error{color:#9f1d1d;font-weight:700}
+@media(max-width:980px){.wa-bot-grid{grid-template-columns:1fr}}

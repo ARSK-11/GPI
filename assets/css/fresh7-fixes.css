@@ -1,0 +1,30 @@
+/* Fresh 7: Flush double-sticky navigation for the main Ibadah page and its detail pages. */
+body.f4-service-page{--gpi-ibadah-header-height:86px}
+body.f4-service-page>.refresh-nav.official-nav{
+  position:sticky!important;top:0!important;left:auto!important;right:auto!important;
+  width:100%!important;height:var(--gpi-ibadah-header-height)!important;
+  min-height:var(--gpi-ibadah-header-height)!important;
+  z-index:200!important;margin:0!important;box-shadow:none!important;
+  background:#13191f!important;
+}
+body.f4-service-page>.refresh-nav.official-nav>.container{
+  height:100%!important;min-height:0!important;align-items:center;
+}
+body.f4-service-page .f4-service-nav{
+  position:sticky!important;top:var(--gpi-ibadah-header-height)!important;
+  z-index:190!important;margin:0!important;left:auto!important;
+  width:100%;background:#252a30;border-top:1px solid #ffffff16;
+  box-shadow:none!important;scrollbar-width:thin;
+}
+body.f4-service-page .f4-service-nav a:focus-visible{outline-offset:-3px}
+body.f4-service-page #main-content{overflow:visible}
+html:has(body.f4-service-page){scroll-padding-top:148px}
+.warta-upload-status[hidden]{display:none!important}
+.warta-upload-status{border:1px solid #c4d6e8;background:#f0f6fc;border-radius:12px;padding:14px;display:grid;gap:7px;color:#174f78}
+.warta-upload-status label{font-weight:750;display:flex;justify-content:space-between;gap:12px;margin:0}
+.warta-upload-status progress{width:100%;height:13px;accent-color:#124d79}
+.warta-upload-status small{font-size:12px;color:#52677a}
+@media(max-width:900px){
+ body.f4-service-page{--gpi-ibadah-header-height:76px}
+ html:has(body.f4-service-page){scroll-padding-top:136px}
+}

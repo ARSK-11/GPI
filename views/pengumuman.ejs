@@ -1,0 +1,5 @@
+<%- public_head("Warta Gereja — GPI Cipayung", s) %>
+<body>
+<%- public_header(s, 'pengumuman') %>
+<main id="main-content"><header class="refresh-page-hero"><div class="container"><span class="eyebrow">Informasi & kabar gereja</span><h1>Warta Gereja.</h1><p>Informasi resmi mengenai ibadah, kegiatan jemaat, dan pelayanan GPI Cipayung.</p></div></header><section class="refresh-section"><div class="container"><div class="refresh-section-head"><div><span class="eyebrow">Warta terpublikasi</span><h2>Kabar terbaru.</h2></div></div><div id="pengumumanList" class="announcement-grid"><%- render_pengumuman(data.pengumuman) %></div></div></section></main>
+<%- public_footer(s) %>

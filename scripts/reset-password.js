@@ -1,0 +1,3 @@
+const bcrypt=require('bcryptjs');
+const db=require('../app/repository');
+(async()=>{try{const username=process.argv[2];const password=process.env.NEW_PASSWORD;if(!username||!password||password.length<8)throw Error('Isi NEW_PASSWORD (minimal 8 karakter) melalui environment dan berikan username.');const hash=await bcrypt.hash(password,12);const r=await db.query('UPDATE users SET password_hash=? WHERE username=?',[hash,username]);if(!r.affectedRows)throw Error('Username tidak ditemukan.');console.log('Password berhasil diperbarui.');}catch(e){console.error(e.message);process.exitCode=1;}finally{await db.pool.end();}})();

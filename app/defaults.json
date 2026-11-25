@@ -1,0 +1,954 @@
+{
+  "head": "<!DOCTYPE html><html lang=\"id\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"description\" content=\"Website resmi __NAME__ — Gereja Pentakosta Indonesia Sidang Cipayung. Jadwal ibadah, pelayanan, media, dan pengumuman gereja.\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Merriweather:wght@700;900&display=swap\" rel=\"stylesheet\"><link rel=\"icon\" type=\"image/jpeg\" href=\"assets/img/__LOGO__.jpg\"><link rel=\"apple-touch-icon\" href=\"assets/img/__LOGO__.jpg\"><link rel=\"stylesheet\" href=\"assets/css/public-portal.css?v=1783159090\"><title>__TITLE__</title></head>",
+  "footer": "<footer class=\"footer\"><div class=\"container\"><div class=\"footer-main\"><div class=\"footer-brand-col\"><div class=\"footer-brand\"><img data-logo-gereja src=\"assets/img/__LOGO__.jpg\" alt=\"Logo __NAME__\"><div><h3>__NAME__</h3><p>Gereja Pentakosta Indonesia<br>Sidang Cipayung, Jakarta Timur</p></div></div><div class=\"footer-socials\"><a href=\"https://instagram.com/gpicipayung\" target=\"_blank\" rel=\"noopener\" class=\"footer-social-btn\" aria-label=\"Instagram GPI Cipayung\"><span class=\"social-icon\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"2\" width=\"20\" height=\"20\" rx=\"5\" ry=\"5\"/><path d=\"M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z\"/><line x1=\"17.5\" y1=\"6.5\" x2=\"17.51\" y2=\"6.5\"/></svg></span><span class=\"social-label\">@gpicipayung</span></a><a href=\"https://www.facebook.com/gpi.cipayung.5/?locale=id_ID\" target=\"_blank\" rel=\"noopener\" class=\"footer-social-btn\" aria-label=\"Facebook GPI Cipayung\"><span class=\"social-icon\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z\"/></svg></span><span class=\"social-label\">GPI Sidang Cipayung</span></a><a href=\"https://www.youtube.com/@gpisidangcipayung\" target=\"_blank\" rel=\"noopener\" class=\"footer-social-btn\" aria-label=\"YouTube GPI Sidang Cipayung\"><span class=\"social-icon\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M22.5 6.4a3 3 0 0 0-2.1-2.1C18.5 3.8 12 3.8 12 3.8s-6.5 0-8.4.5a3 3 0 0 0-2.1 2.1A31.6 31.6 0 0 0 1 12a31.6 31.6 0 0 0 .5 5.6 3 3 0 0 0 2.1 2.1c1.9.5 8.4.5 8.4.5s6.5 0 8.4-.5a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 23 12a31.6 31.6 0 0 0-.5-5.6Z\"/><path d=\"m10 15 5.2-3L10 9v6Z\"/></svg></span><span class=\"social-label\">GPI Sidang Cipayung</span></a></div></div><div class=\"footer-contact-col\"><h4>Hubungi Kami</h4><div class=\"footer-contact-list\"><a href=\"https://maps.google.com/?q=Jl.+Tengki+No.78+RT04%2F03+Cipayung+Jakarta+Timur\" target=\"_blank\" rel=\"noopener\" class=\"footer-contact-item\" data-alamat-gereja><span class=\"fc-icon\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z\"/><circle cx=\"12\" cy=\"10\" r=\"3\"/></svg></span><span>Jl. Tengki No.78 RT04/03 Cipayung, Jakarta Timur</span></a><a href=\"https://wa.me/6281315490602\" target=\"_blank\" rel=\"noopener\" class=\"footer-contact-item\"><span class=\"fc-icon\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z\"/></svg></span><span>081315490602 <em>(Rahel – Ibadah &amp; Pelayanan)</em></span></a><a href=\"https://wa.me/6288214498018\" target=\"_blank\" rel=\"noopener\" class=\"footer-contact-item\"><span class=\"fc-icon\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z\"/></svg></span><span>088214498018 <em>(Johan)</em></span></a><a href=\"mailto:gpisidangcipayung@gmail.com\" class=\"footer-contact-item\" data-email-gereja><span class=\"fc-icon\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z\"/><polyline points=\"22,6 12,13 2,6\"/></svg></span><span>gpisidangcipayung@gmail.com</span></a></div></div></div><div class=\"footer-bottom\">© 2026 __NAME__ — Gereja Pentakosta Indonesia Sidang Cipayung, Jakarta Timur.</div></div></footer><script src=\"assets/js/public-html.js?v=1783159061\"></script></body></html>",
+  "headers": {
+    "beranda": "<div class=\"topline\"><div class=\"container\"><span>Gereja Pentakosta Indonesia Sidang Cipayung</span><span>Informasi Ibadah • Pelayanan • Media Gereja</span></div></div><nav class=\"official-nav\"><div class=\"container\"><a class=\"official-brand\" href=\"/\"><img data-logo-gereja src=\"assets/img/__LOGO__.jpg\" alt=\"Logo __NAME__\"><span><strong data-nama-gereja>__NAME__</strong><small>Gereja Pentakosta Indonesia</small></span></a><button class=\"nav-toggle\" aria-label=\"Buka menu\">☰</button><div class=\"official-links\"><a class=\"active\" href=\"/\">Beranda</a><a href=\"tentang\">Tentang</a><a href=\"jadwal-ibadah\">Jadwal Ibadah</a><a href=\"pelayanan\">Pelayanan</a><a href=\"media\">Media</a><a href=\"pengumuman\">Pengumuman</a><a href=\"kontak\">Kontak</a><a class=\"login-link\" href=\"login\">Login</a></div></div></nav>",
+    "tentang": "<div class=\"topline\"><div class=\"container\"><span>Gereja Pentakosta Indonesia Sidang Cipayung</span><span>Informasi Ibadah • Pelayanan • Media Gereja</span></div></div><nav class=\"official-nav\"><div class=\"container\"><a class=\"official-brand\" href=\"/\"><img data-logo-gereja src=\"assets/img/__LOGO__.jpg\" alt=\"Logo __NAME__\"><span><strong data-nama-gereja>__NAME__</strong><small>Gereja Pentakosta Indonesia</small></span></a><button class=\"nav-toggle\" aria-label=\"Buka menu\">☰</button><div class=\"official-links\"><a href=\"/\">Beranda</a><a class=\"active\" href=\"tentang\">Tentang</a><a href=\"jadwal-ibadah\">Jadwal Ibadah</a><a href=\"pelayanan\">Pelayanan</a><a href=\"media\">Media</a><a href=\"pengumuman\">Pengumuman</a><a href=\"kontak\">Kontak</a><a class=\"login-link\" href=\"login\">Login</a></div></div></nav>",
+    "jadwal": "<div class=\"topline\"><div class=\"container\"><span>Gereja Pentakosta Indonesia Sidang Cipayung</span><span>Informasi Ibadah • Pelayanan • Media Gereja</span></div></div><nav class=\"official-nav\"><div class=\"container\"><a class=\"official-brand\" href=\"/\"><img data-logo-gereja src=\"assets/img/__LOGO__.jpg\" alt=\"Logo __NAME__\"><span><strong data-nama-gereja>__NAME__</strong><small>Gereja Pentakosta Indonesia</small></span></a><button class=\"nav-toggle\" aria-label=\"Buka menu\">☰</button><div class=\"official-links\"><a href=\"/\">Beranda</a><a href=\"tentang\">Tentang</a><a class=\"active\" href=\"jadwal-ibadah\">Jadwal Ibadah</a><a href=\"pelayanan\">Pelayanan</a><a href=\"media\">Media</a><a href=\"pengumuman\">Pengumuman</a><a href=\"kontak\">Kontak</a><a class=\"login-link\" href=\"login\">Login</a></div></div></nav>",
+    "pelayanan": "<div class=\"topline\"><div class=\"container\"><span>Gereja Pentakosta Indonesia Sidang Cipayung</span><span>Informasi Ibadah • Pelayanan • Media Gereja</span></div></div><nav class=\"official-nav\"><div class=\"container\"><a class=\"official-brand\" href=\"/\"><img data-logo-gereja src=\"assets/img/__LOGO__.jpg\" alt=\"Logo __NAME__\"><span><strong data-nama-gereja>__NAME__</strong><small>Gereja Pentakosta Indonesia</small></span></a><button class=\"nav-toggle\" aria-label=\"Buka menu\">☰</button><div class=\"official-links\"><a href=\"/\">Beranda</a><a href=\"tentang\">Tentang</a><a href=\"jadwal-ibadah\">Jadwal Ibadah</a><a class=\"active\" href=\"pelayanan\">Pelayanan</a><a href=\"media\">Media</a><a href=\"pengumuman\">Pengumuman</a><a href=\"kontak\">Kontak</a><a class=\"login-link\" href=\"login\">Login</a></div></div></nav>",
+    "media": "<div class=\"topline\"><div class=\"container\"><span>Gereja Pentakosta Indonesia Sidang Cipayung</span><span>Informasi Ibadah • Pelayanan • Media Gereja</span></div></div><nav class=\"official-nav\"><div class=\"container\"><a class=\"official-brand\" href=\"/\"><img data-logo-gereja src=\"assets/img/__LOGO__.jpg\" alt=\"Logo __NAME__\"><span><strong data-nama-gereja>__NAME__</strong><small>Gereja Pentakosta Indonesia</small></span></a><button class=\"nav-toggle\" aria-label=\"Buka menu\">☰</button><div class=\"official-links\"><a href=\"/\">Beranda</a><a href=\"tentang\">Tentang</a><a href=\"jadwal-ibadah\">Jadwal Ibadah</a><a href=\"pelayanan\">Pelayanan</a><a class=\"active\" href=\"media\">Media</a><a href=\"pengumuman\">Pengumuman</a><a href=\"kontak\">Kontak</a><a class=\"login-link\" href=\"login\">Login</a></div></div></nav>",
+    "pengumuman": "<div class=\"topline\"><div class=\"container\"><span>Gereja Pentakosta Indonesia Sidang Cipayung</span><span>Informasi Ibadah • Pelayanan • Media Gereja</span></div></div><nav class=\"official-nav\"><div class=\"container\"><a class=\"official-brand\" href=\"/\"><img data-logo-gereja src=\"assets/img/__LOGO__.jpg\" alt=\"Logo __NAME__\"><span><strong data-nama-gereja>__NAME__</strong><small>Gereja Pentakosta Indonesia</small></span></a><button class=\"nav-toggle\" aria-label=\"Buka menu\">☰</button><div class=\"official-links\"><a href=\"/\">Beranda</a><a href=\"tentang\">Tentang</a><a href=\"jadwal-ibadah\">Jadwal Ibadah</a><a href=\"pelayanan\">Pelayanan</a><a href=\"media\">Media</a><a class=\"active\" href=\"pengumuman\">Pengumuman</a><a href=\"kontak\">Kontak</a><a class=\"login-link\" href=\"login\">Login</a></div></div></nav>",
+    "kontak": "<div class=\"topline\"><div class=\"container\"><span>Gereja Pentakosta Indonesia Sidang Cipayung</span><span>Informasi Ibadah • Pelayanan • Media Gereja</span></div></div><nav class=\"official-nav\"><div class=\"container\"><a class=\"official-brand\" href=\"/\"><img data-logo-gereja src=\"assets/img/__LOGO__.jpg\" alt=\"Logo __NAME__\"><span><strong data-nama-gereja>__NAME__</strong><small>Gereja Pentakosta Indonesia</small></span></a><button class=\"nav-toggle\" aria-label=\"Buka menu\">☰</button><div class=\"official-links\"><a href=\"/\">Beranda</a><a href=\"tentang\">Tentang</a><a href=\"jadwal-ibadah\">Jadwal Ibadah</a><a href=\"pelayanan\">Pelayanan</a><a href=\"media\">Media</a><a href=\"pengumuman\">Pengumuman</a><a class=\"active\" href=\"kontak\">Kontak</a><a class=\"login-link\" href=\"login\">Login</a></div></div></nav>"
+  },
+  "settings": {
+    "nama_gereja": "GPI Cipayung",
+    "alamat_gereja": "Jl. Tengki No. 78 RT04/03 Cipayung, Jakarta Timur",
+    "telepon_gereja": "081315490602",
+    "email_gereja": "gpisidangcipayung@gmail.com",
+    "whatsapp_group_invite": "https://chat.whatsapp.com/CkPJODyvqcu7IjUQqyAABu",
+    "logo_path": "assets/img/logo-gpi-cipayung.jpg"
+  },
+  "services": [
+    {
+      "kategori": "Pelayanan",
+      "nama_tim": "Tim Musik & Singers",
+      "deskripsi": "Melayani pujian, penyembahan, musik ibadah, dan singers.",
+      "penanggung_jawab": "Koordinator Musik",
+      "status": "published"
+    },
+    {
+      "kategori": "Pelayanan",
+      "nama_tim": "Tim Pelayanan Gereja",
+      "deskripsi": "Koordinasi pelayan ibadah, usher, multimedia, dan pendukung pelayanan.",
+      "penanggung_jawab": "Pengurus Gereja",
+      "status": "published"
+    },
+    {
+      "kategori": "Pelayanan",
+      "nama_tim": "Sekolah Minggu",
+      "deskripsi": "Membimbing generasi muda mengenal kasih Tuhan sejak dini.",
+      "penanggung_jawab": "Koordinator Sekolah Minggu",
+      "status": "published"
+    },
+    {
+      "kategori": "Pelayanan",
+      "nama_tim": "Revive Generation",
+      "deskripsi": "Membangun karakter Kristiani dalam diri generasi muda gereja.",
+      "penanggung_jawab": "Koordinator Revive Generation",
+      "status": "published"
+    },
+    {
+      "kategori": "Pelayanan",
+      "nama_tim": "Kaum Ibu",
+      "deskripsi": "Wadah pertumbuhan rohani dan pemberdayaan kaum wanita gereja.",
+      "penanggung_jawab": "Koordinator Kaum Ibu",
+      "status": "published"
+    },
+    {
+      "kategori": "Pelayanan",
+      "nama_tim": "Pendalaman Alkitab",
+      "deskripsi": "Kelompok kecil untuk menggali kebenaran Firman Tuhan.",
+      "penanggung_jawab": "Koordinator PA",
+      "status": "published"
+    }
+  ],
+  "teams": [
+    {
+      "kategori": "musik",
+      "tim": "Pemain Musik",
+      "nama_lengkap": "Natalia Debora Sinaga",
+      "jabatan": "Pemain Keyboard",
+      "urutan": 1,
+      "foto_path": ""
+    },
+    {
+      "kategori": "musik",
+      "tim": "Pemain Musik",
+      "nama_lengkap": "Andre Siburian",
+      "jabatan": "Pemain Gitar",
+      "urutan": 2,
+      "foto_path": ""
+    },
+    {
+      "kategori": "musik",
+      "tim": "Pemain Musik",
+      "nama_lengkap": "Gideon Siburian",
+      "jabatan": "Pemain Drum",
+      "urutan": 3,
+      "foto_path": "assets/img/gideon.jpg"
+    },
+    {
+      "kategori": "musik",
+      "tim": "Pemain Musik",
+      "nama_lengkap": "Yakub Rumahorbo",
+      "jabatan": "Pemain Bass",
+      "urutan": 4,
+      "foto_path": ""
+    },
+    {
+      "kategori": "musik",
+      "tim": "Pemain Cadangan",
+      "nama_lengkap": "David Sitompul",
+      "jabatan": "Bass & Gitar",
+      "urutan": 5,
+      "foto_path": "assets/img/david.jpg"
+    },
+    {
+      "kategori": "musik",
+      "tim": "Pemain Cadangan",
+      "nama_lengkap": "Aaron Sinaga",
+      "jabatan": "Keyboard & Drum",
+      "urutan": 6,
+      "foto_path": ""
+    },
+    {
+      "kategori": "musik",
+      "tim": "Pemain Cadangan",
+      "nama_lengkap": "Johan Sihombing",
+      "jabatan": "Gitar & Drum",
+      "urutan": 7,
+      "foto_path": "assets/img/johan.jpg"
+    },
+    {
+      "kategori": "singer",
+      "tim": "Singers / Pujian",
+      "nama_lengkap": "Septiana Sinaga",
+      "jabatan": "Vocalist",
+      "urutan": 11,
+      "foto_path": "assets/img/septiana.jpg"
+    },
+    {
+      "kategori": "singer",
+      "tim": "Singers / Pujian",
+      "nama_lengkap": "Rahel Sitompul",
+      "jabatan": "Vocalist",
+      "urutan": 12,
+      "foto_path": "assets/img/rahel.jpg"
+    },
+    {
+      "kategori": "singer",
+      "tim": "Singers / Pujian",
+      "nama_lengkap": "Isak Sinaga",
+      "jabatan": "Vocalist",
+      "urutan": 13,
+      "foto_path": "assets/img/isak.jpg"
+    },
+    {
+      "kategori": "pelayanan_gereja",
+      "tim": "Gembala Sidang",
+      "nama_lengkap": "Pdt. E.H. Sinaga",
+      "jabatan": "Gembala Sidang",
+      "urutan": 1,
+      "foto_path": "assets/img/pdt-e-h-sinaga.jpg"
+    },
+    {
+      "kategori": "pelayanan_gereja",
+      "tim": "Pendamping & Pelayan Gereja",
+      "nama_lengkap": "Ev. D. F. Manurung",
+      "jabatan": "Evangelis",
+      "urutan": 2,
+      "foto_path": ""
+    },
+    {
+      "kategori": "pelayanan_gereja",
+      "tim": "Pendamping & Pelayan Gereja",
+      "nama_lengkap": "Ibu Pdt. J. Sinaga",
+      "jabatan": "Hamba Tuhan",
+      "urutan": 3,
+      "foto_path": ""
+    },
+    {
+      "kategori": "pelayanan_gereja",
+      "tim": "Pendamping & Pelayan Gereja",
+      "nama_lengkap": "Gr. H. Sitorus",
+      "jabatan": "Hamba Tuhan",
+      "urutan": 4,
+      "foto_path": ""
+    },
+    {
+      "kategori": "pelayanan_gereja",
+      "tim": "Pendamping & Pelayan Gereja",
+      "nama_lengkap": "St. N. Sihombing",
+      "jabatan": "Hamba Tuhan",
+      "urutan": 5,
+      "foto_path": ""
+    },
+    {
+      "kategori": "pelayanan_gereja",
+      "tim": "Pendamping & Pelayan Gereja",
+      "nama_lengkap": "St. R. B. Rumahorbo",
+      "jabatan": "Hamba Tuhan",
+      "urutan": 6,
+      "foto_path": ""
+    },
+    {
+      "kategori": "pelayanan_gereja",
+      "tim": "Pendamping & Pelayan Gereja",
+      "nama_lengkap": "St. R. D. Sinaga",
+      "jabatan": "Hamba Tuhan",
+      "urutan": 7,
+      "foto_path": ""
+    },
+    {
+      "kategori": "pelayanan_gereja",
+      "tim": "Pendamping & Pelayan Gereja",
+      "nama_lengkap": "St. H. Sitorus",
+      "jabatan": "Hamba Tuhan",
+      "urutan": 8,
+      "foto_path": ""
+    },
+    {
+      "kategori": "pelayanan_gereja",
+      "tim": "Pendamping & Pelayan Gereja",
+      "nama_lengkap": "Ibu St. Siagian",
+      "jabatan": "Hamba Tuhan",
+      "urutan": 9,
+      "foto_path": ""
+    },
+    {
+      "kategori": "diakonia",
+      "tim": "Diakonia Gereja",
+      "nama_lengkap": "(Belum Diisi)",
+      "jabatan": "Ketua",
+      "urutan": 1,
+      "foto_path": ""
+    },
+    {
+      "kategori": "diakonia",
+      "tim": "Diakonia Gereja",
+      "nama_lengkap": "(Belum Diisi)",
+      "jabatan": "Sekretaris",
+      "urutan": 2,
+      "foto_path": ""
+    },
+    {
+      "kategori": "diakonia",
+      "tim": "Diakonia Gereja",
+      "nama_lengkap": "(Belum Diisi)",
+      "jabatan": "Keuangan",
+      "urutan": 3,
+      "foto_path": ""
+    },
+    {
+      "kategori": "sekolah_minggu",
+      "tim": "Sekolah Minggu",
+      "nama_lengkap": "Natalia Debora Sinaga",
+      "jabatan": "Koordinator Guru Sekolah Minggu",
+      "urutan": 1,
+      "foto_path": "assets/img/team/natalia-debora-sinaga.svg"
+    },
+    {
+      "kategori": "sekolah_minggu",
+      "tim": "Sekolah Minggu",
+      "nama_lengkap": "Ibu Pdt. E. H. Sinaga / Br. Nainggolan",
+      "jabatan": "Guru Sekolah Minggu",
+      "urutan": 2,
+      "foto_path": "assets/img/team/ibu-pdt-e-h-sinaga-br-nainggolan.svg"
+    },
+    {
+      "kategori": "sekolah_minggu",
+      "tim": "Sekolah Minggu",
+      "nama_lengkap": "Ibu St. R. D. Sinaga / Br. Simanjuntak",
+      "jabatan": "Guru Sekolah Minggu",
+      "urutan": 3,
+      "foto_path": "assets/img/team/ibu-st-r-d-sinaga-br-simanjuntak.svg"
+    },
+    {
+      "kategori": "sekolah_minggu",
+      "tim": "Sekolah Minggu",
+      "nama_lengkap": "Bp. St. R. D. Sinaga",
+      "jabatan": "Guru Sekolah Minggu",
+      "urutan": 4,
+      "foto_path": "assets/img/team/bp-st-r-d-sinaga.svg"
+    },
+    {
+      "kategori": "sekolah_minggu",
+      "tim": "Sekolah Minggu",
+      "nama_lengkap": "Gideon Siburian",
+      "jabatan": "Guru Sekolah Minggu",
+      "urutan": 5,
+      "foto_path": "assets/img/gideon.jpg"
+    },
+    {
+      "kategori": "sekolah_minggu",
+      "tim": "Sekolah Minggu",
+      "nama_lengkap": "Ibu Siagian / Br. Sinaga",
+      "jabatan": "Guru Sekolah Minggu",
+      "urutan": 6,
+      "foto_path": "assets/img/team/ibu-siagian-br-sinaga.svg"
+    },
+    {
+      "kategori": "sekolah_minggu",
+      "tim": "Sekolah Minggu",
+      "nama_lengkap": "Isak Sinaga",
+      "jabatan": "Guru Sekolah Minggu",
+      "urutan": 7,
+      "foto_path": "assets/img/isak.jpg"
+    },
+    {
+      "kategori": "sekolah_minggu",
+      "tim": "Sekolah Minggu",
+      "nama_lengkap": "David Sitompul",
+      "jabatan": "Guru Sekolah Minggu",
+      "urutan": 8,
+      "foto_path": "assets/img/david.jpg"
+    },
+    {
+      "kategori": "sekolah_minggu",
+      "tim": "Sekolah Minggu",
+      "nama_lengkap": "Septiana Sinaga",
+      "jabatan": "Guru Sekolah Minggu",
+      "urutan": 9,
+      "foto_path": "assets/img/septiana.jpg"
+    },
+    {
+      "kategori": "sekolah_minggu",
+      "tim": "Sekolah Minggu",
+      "nama_lengkap": "Johan Sihombing",
+      "jabatan": "Guru Sekolah Minggu",
+      "urutan": 10,
+      "foto_path": "assets/img/johan.jpg"
+    },
+    {
+      "kategori": "sekolah_minggu",
+      "tim": "Sekolah Minggu",
+      "nama_lengkap": "Emely Sihombing",
+      "jabatan": "Guru Sekolah Minggu",
+      "urutan": 11,
+      "foto_path": "assets/img/team/emely-sihombing.svg"
+    },
+    {
+      "kategori": "kaum_ibu",
+      "tim": "Kaum Ibu",
+      "nama_lengkap": "Ibu Pdt. J. Sinaga / Br. Nababan",
+      "jabatan": "Pembina",
+      "urutan": 1,
+      "foto_path": "assets/img/team/ibu-pdt-j-sinaga-br-nababan.svg"
+    },
+    {
+      "kategori": "kaum_ibu",
+      "tim": "Kaum Ibu",
+      "nama_lengkap": "Ibu Lumbangaol / Br. Manurung",
+      "jabatan": "Ketua",
+      "urutan": 2,
+      "foto_path": "assets/img/team/ibu-lumbangaol-br-manurung.svg"
+    },
+    {
+      "kategori": "kaum_ibu",
+      "tim": "Kaum Ibu",
+      "nama_lengkap": "Ibu Sihombing / Br. Sinaga",
+      "jabatan": "Sekretaris",
+      "urutan": 3,
+      "foto_path": "assets/img/team/ibu-sihombing-br-sinaga.svg"
+    },
+    {
+      "kategori": "kaum_ibu",
+      "tim": "Kaum Ibu",
+      "nama_lengkap": "Ibu Siagian / Br. Sinaga",
+      "jabatan": "Bendahara",
+      "urutan": 4,
+      "foto_path": "assets/img/team/ibu-siagian-br-sinaga.svg"
+    },
+    {
+      "kategori": "kaum_ibu",
+      "tim": "Kaum Ibu",
+      "nama_lengkap": "Ibu Gr. H. Sitorus / Br. Sihombing",
+      "jabatan": "Sie. Doa",
+      "urutan": 5,
+      "foto_path": "assets/img/team/ibu-gr-h-sitorus-br-sihombing.svg"
+    },
+    {
+      "kategori": "kaum_ibu",
+      "tim": "Kaum Ibu",
+      "nama_lengkap": "Ibu St. Sinaga / Br. Sinaga",
+      "jabatan": "Sie. Pemerhati",
+      "urutan": 6,
+      "foto_path": "assets/img/team/ibu-st-sinaga-br-sinaga.svg"
+    },
+    {
+      "kategori": "kaum_ibu",
+      "tim": "Kaum Ibu",
+      "nama_lengkap": "Ibu Pdt. E. H. Sinaga / Br. Nainggolan",
+      "jabatan": "Anggota",
+      "urutan": 7,
+      "foto_path": "assets/img/team/ibu-pdt-e-h-sinaga-br-nainggolan.svg"
+    },
+    {
+      "kategori": "kaum_ibu",
+      "tim": "Kaum Ibu",
+      "nama_lengkap": "Ibu Ev. D. F. Manurung",
+      "jabatan": "Anggota",
+      "urutan": 8,
+      "foto_path": "assets/img/team/ibu-ev-d-f-manurung.svg"
+    },
+    {
+      "kategori": "kaum_ibu",
+      "tim": "Kaum Ibu",
+      "nama_lengkap": "Ibu St. R. B. Rumahorbo / Br. Sitompul",
+      "jabatan": "Anggota",
+      "urutan": 9,
+      "foto_path": "assets/img/team/ibu-st-r-b-rumahorbo-br-sitompul.svg"
+    },
+    {
+      "kategori": "kaum_ibu",
+      "tim": "Kaum Ibu",
+      "nama_lengkap": "Ibu St. Sinaga / Br. Simanjuntak",
+      "jabatan": "Anggota",
+      "urutan": 10,
+      "foto_path": "assets/img/team/ibu-st-sinaga-br-simanjuntak.svg"
+    },
+    {
+      "kategori": "kaum_ibu",
+      "tim": "Kaum Ibu",
+      "nama_lengkap": "Ibu St. N. Sihombing / Br. Silitonga",
+      "jabatan": "Anggota",
+      "urutan": 11,
+      "foto_path": "assets/img/team/ibu-st-n-sihombing-br-silitonga.svg"
+    },
+    {
+      "kategori": "pemuda",
+      "tim": "Revive Generation",
+      "nama_lengkap": "Bp. St. H. Sitorus",
+      "jabatan": "Pembina",
+      "urutan": 1,
+      "foto_path": "assets/img/team/bp-st-h-sitorus.svg"
+    },
+    {
+      "kategori": "pemuda",
+      "tim": "Revive Generation",
+      "nama_lengkap": "Gideon Ferdinan Siburian, S.Pd",
+      "jabatan": "Ketua",
+      "urutan": 2,
+      "foto_path": "assets/img/gideon.jpg"
+    },
+    {
+      "kategori": "pemuda",
+      "tim": "Revive Generation",
+      "nama_lengkap": "Imell Warnita Sihombing",
+      "jabatan": "Sekretaris",
+      "urutan": 3,
+      "foto_path": "assets/img/team/imell-warnita-sihombing.svg"
+    },
+    {
+      "kategori": "pemuda",
+      "tim": "Revive Generation",
+      "nama_lengkap": "Zefanya Manurung",
+      "jabatan": "Bendahara",
+      "urutan": 4,
+      "foto_path": "assets/img/team/zefanya-manurung.svg"
+    },
+    {
+      "kategori": "pemuda",
+      "tim": "Revive Generation",
+      "nama_lengkap": "Abygail Septiani Rumahorbo",
+      "jabatan": "Kerohanian",
+      "urutan": 5,
+      "foto_path": "assets/img/team/abygail-septiani-rumahorbo.svg"
+    },
+    {
+      "kategori": "pemuda",
+      "tim": "Revive Generation",
+      "nama_lengkap": "Yosia Natanael Siagian",
+      "jabatan": "Humas",
+      "urutan": 6,
+      "foto_path": "assets/img/team/yosia-natanael-siagian.svg"
+    },
+    {
+      "kategori": "pemuda",
+      "tim": "Revive Generation",
+      "nama_lengkap": "Taruli Abigael Kristina Samosir",
+      "jabatan": "Humas",
+      "urutan": 7,
+      "foto_path": "assets/img/team/taruli-abigael-kristina-samosir.svg"
+    },
+    {
+      "kategori": "media",
+      "tim": "Media Gereja",
+      "nama_lengkap": "Johan Sihombing",
+      "jabatan": "Koordinator Media",
+      "urutan": 1,
+      "foto_path": "assets/img/johan.jpg"
+    },
+    {
+      "kategori": "media",
+      "tim": "Media Gereja",
+      "nama_lengkap": "Septiana Sinaga",
+      "jabatan": "Publikasi",
+      "urutan": 2,
+      "foto_path": "assets/img/septiana.jpg"
+    },
+    {
+      "kategori": "media",
+      "tim": "Media Gereja",
+      "nama_lengkap": "Rahel Sitompul",
+      "jabatan": "Dokumentasi",
+      "urutan": 3,
+      "foto_path": "assets/img/rahel.jpg"
+    },
+    {
+      "kategori": "media",
+      "tim": "Media Gereja",
+      "nama_lengkap": "David Sitompul",
+      "jabatan": "Teknis Media",
+      "urutan": 4,
+      "foto_path": "assets/img/david.jpg"
+    },
+    {
+      "kategori": "media",
+      "tim": "Media Gereja",
+      "nama_lengkap": "Isak Sinaga",
+      "jabatan": "Konten Digital",
+      "urutan": 5,
+      "foto_path": "assets/img/isak.jpg"
+    }
+  ],
+  "pa": [
+    {
+      "judul": "Cerita Alkitab untuk Pertumbuhan Iman",
+      "tipe": "cerita",
+      "ayat": "Mazmur 119:105",
+      "isi": "Firman Tuhan menjadi pelita dalam kehidupan. Melalui pendalaman Alkitab, jemaat diajak mengenal kehendak Tuhan dan menerapkannya dalam keluarga, pelayanan, dan kehidupan sehari-hari.",
+      "media_path": "",
+      "urutan": 1,
+      "status": "published"
+    },
+    {
+      "judul": "Renungan Singkat: Hidup dalam Kasih",
+      "tipe": "renungan",
+      "ayat": "Yohanes 13:34-35",
+      "isi": "Kasih menjadi tanda murid Kristus. Materi ini dapat dipakai sebagai bahan diskusi kelompok kecil, sekolah minggu, atau pembinaan rohani keluarga.",
+      "media_path": "",
+      "urutan": 2,
+      "status": "published"
+    },
+    {
+      "judul": "Materi Animasi Anak: Mengenal Doa",
+      "tipe": "animasi",
+      "ayat": "1 Tesalonika 5:17",
+      "isi": "Konten animasi rohani dapat dipakai untuk membantu anak dan remaja memahami pentingnya berdoa, bersyukur, dan membangun relasi dengan Tuhan.",
+      "media_path": "",
+      "urutan": 3,
+      "status": "published"
+    },
+    {
+      "judul": "Galeri Kegiatan Pendalaman Alkitab",
+      "tipe": "foto",
+      "ayat": "",
+      "isi": "Bagian ini dapat diisi dokumentasi foto kegiatan PA, ibadah rumah tangga, dan pembinaan iman jemaat.",
+      "media_path": "assets/img/logo-gpi-cipayung.jpg",
+      "urutan": 4,
+      "status": "published"
+    }
+  ],
+  "roles": {
+    "admin": {
+      "dashboard": {
+        "view": true
+      },
+      "users": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": false
+      },
+      "jemaat": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": true,
+        "export": true
+      },
+      "jadwal": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": true,
+        "export": true
+      },
+      "pengumuman": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "media": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "pesan": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "sakramen": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      },
+      "persembahan": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "pernikahan": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      },
+      "tim_pelayan": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "pendalaman_alkitab": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "whatsapp": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": false
+      },
+      "terhubung": {
+        "view": true,
+        "update": true,
+        "delete": true,
+        "create": true
+      },
+      "acara": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "ibadah_konten": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "connect_categories": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "support": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      }
+    },
+    "majelis": {
+      "dashboard": {
+        "view": true
+      },
+      "users": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      },
+      "jemaat": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": true,
+        "export": true
+      },
+      "jadwal": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": true,
+        "export": true
+      },
+      "pengumuman": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "media": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "pesan": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "sakramen": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      },
+      "persembahan": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "pernikahan": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      },
+      "tim_pelayan": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "pendalaman_alkitab": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      },
+      "whatsapp": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      },
+      "terhubung": {
+        "view": true,
+        "update": true,
+        "delete": true,
+        "create": true
+      },
+      "acara": {
+        "view": true,
+        "create": false,
+        "update": false,
+        "delete": false
+      },
+      "ibadah_konten": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "connect_categories": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "support": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true,
+        "import": false,
+        "export": true
+      }
+    },
+    "pendeta": {
+      "dashboard": {
+        "view": true
+      },
+      "users": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      },
+      "jemaat": {
+        "view": true,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": true
+      },
+      "jadwal": {
+        "view": true,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": true
+      },
+      "pengumuman": {
+        "view": true,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": true
+      },
+      "media": {
+        "view": true,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": true
+      },
+      "pesan": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      },
+      "sakramen": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      },
+      "persembahan": {
+        "view": true,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": true
+      },
+      "pernikahan": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      },
+      "tim_pelayan": {
+        "view": true,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": true
+      },
+      "pendalaman_alkitab": {
+        "view": true,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": true
+      },
+      "whatsapp": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      },
+      "terhubung": {
+        "view": true,
+        "update": true,
+        "delete": true,
+        "create": true
+      },
+      "acara": {
+        "view": true,
+        "create": false,
+        "update": false,
+        "delete": false
+      },
+      "ibadah_konten": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "connect_categories": {
+        "view": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "support": {
+        "view": false,
+        "create": false,
+        "update": false,
+        "delete": false,
+        "import": false,
+        "export": false
+      }
+    }
+  }
+}

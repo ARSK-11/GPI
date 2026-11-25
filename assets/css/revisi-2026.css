@@ -1,0 +1,57 @@
+/* GPI Cipayung — revisi responsif November 2026 */
+:root{--gpi-night:#14191e;--gpi-blue:#174f78;--gpi-line:#e4e9ef}
+/* Header: no overlapping desktop links, horizontal mobile menu */
+.refresh-nav.official-nav{height:auto!important;min-height:86px;background:#15191d!important;position:relative;z-index:120}
+.refresh-nav>.container{width:min(1540px,calc(100% - 56px));max-width:none;display:flex;align-items:center;justify-content:space-between;gap:clamp(18px,3vw,55px);min-height:86px}
+.refresh-nav .official-brand{display:flex;align-items:center;gap:12px;flex-shrink:0;text-decoration:none;min-width:0}
+.refresh-nav .official-brand strong{font-size:clamp(17px,1.45vw,22px)!important;white-space:nowrap}
+.refresh-nav .official-brand small{font-size:11px;letter-spacing:.015em;white-space:nowrap}
+.refresh-nav .official-links{display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:clamp(12px,1.8vw,30px);margin:0;min-width:0}
+.refresh-nav .official-links a{font-size:clamp(12px,.93vw,15px)!important;font-weight:750;color:#f5f7fb!important;padding:9px 0!important;margin:0!important;white-space:nowrap;text-transform:uppercase;letter-spacing:.01em}
+.refresh-nav .official-links a.active,.refresh-nav .official-links a:hover{color:#a8d7ff!important}
+.refresh-nav .official-links a.active{border-bottom:2px solid #8dc6f1}
+/* The user's original church photo becomes the consistent real-world cover */
+.welcome-visual{background:linear-gradient(90deg,rgba(9,15,23,.82),rgba(9,15,23,.37)),url('/assets/img/cover-ibadah-gpi-cipayung.jpeg') center 66%/cover no-repeat!important;filter:none!important}
+.refresh-page-hero,.connect-hero,.social-hero,.f4-service-hero,.page-hero,.f4-about-cover{position:relative;isolation:isolate;background:#17212a!important;color:#fff!important}
+.refresh-page-hero::before,.connect-hero::before,.social-hero::before,.f4-service-hero::before,.page-hero::before,.f4-about-cover::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(11,17,25,.86),rgba(11,17,25,.47)),url('/assets/img/cover-ibadah-gpi-cipayung.jpeg') center 66%/cover no-repeat!important;filter:none!important}
+.refresh-page-hero h1,.connect-hero h1,.social-hero h1,.f4-service-hero h1,.page-hero h1,.f4-about-cover h2{color:#fff!important;text-shadow:0 2px 18px rgba(0,0,0,.38)}
+.refresh-page-hero p,.connect-hero p,.social-hero p,.f4-service-hero p,.page-hero p{color:#f2f5f8!important;text-shadow:0 1px 9px rgba(0,0,0,.55)}
+.refresh-page-hero .eyebrow,.connect-hero .eyebrow,.social-hero .eyebrow,.f4-service-hero .eyebrow,.page-hero .eyebrow{color:#d1ecff!important}
+.refresh-page-hero,.connect-hero,.social-hero,.page-hero{min-height:280px}
+.f4-about-cover::before{background:linear-gradient(90deg,#09111bea,#09111b91),url('/assets/img/cover-ibadah-gpi-cipayung.jpeg') center/cover no-repeat!important}
+/* Homepage event/schedule legibility */
+.schedule-feature,.worship-grid .schedule-feature{background:#fff;color:#18222e;min-width:0}
+.home-schedule-item,.home-schedule-item h3,.home-schedule-item p{color:#243746!important}
+.home-schedule-item h3{font-size:clamp(15px,1.15vw,19px);font-weight:800!important;line-height:1.35;overflow-wrap:anywhere}
+.home-schedule-item p{font-size:clamp(13px,1vw,16px);font-weight:550!important;line-height:1.55}
+.home-date{flex-shrink:0}
+.prayer-card,.worship-grid .prayer-card{background:#174f78!important;color:#fff!important}
+.prayer-card .eyebrow,.prayer-card h2,.prayer-card h3,.prayer-card p{color:#fff!important;text-shadow:0 1px 3px #0002}
+.prayer-card .refresh-button.light{color:#16344b!important;background:white!important;font-weight:800}
+/* GMS-inspired footer adapted to GPI content, no internal login link */
+.gpi-footer{background:#17191c;color:#d5d7dd;font-family:Inter,'Plus Jakarta Sans',sans-serif}
+.gpi-footer-inner{display:grid;grid-template-columns:minmax(220px,1.15fr) minmax(0,3fr);gap:clamp(24px,3.2vw,60px);padding:76px 0 64px}
+.gpi-footer-logo{display:flex;align-items:center;gap:13px;text-decoration:none;color:#fff!important}
+.gpi-footer-logo img{width:64px;height:64px;border-radius:50%;object-fit:cover;background:#fff}
+.gpi-footer-logo strong{display:block;font-size:23px;font-weight:900;letter-spacing:-.03em}
+.gpi-footer-logo small{display:block;font-size:12px;color:#c9d0d8;margin-top:4px}
+.gpi-footer-brand p{line-height:1.8;font-size:14px;color:#aeb6c0;max-width:320px;margin:18px 0}
+.gpi-footer-brand>a:not(.gpi-footer-logo){font-size:13px;color:#a9c7e3;overflow-wrap:anywhere}
+.gpi-footer-columns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px}
+.gpi-footer-col{display:flex;flex-direction:column;align-items:flex-start;gap:15px;min-width:0}
+.gpi-footer-col h3{color:#fff;font-size:14px;letter-spacing:.08em;font-weight:900;margin:3px 0 18px}
+.gpi-footer-col a{color:#b5bac4;font-size:14px;line-height:1.55;text-decoration:none;transition:color .2s}
+.gpi-footer-col a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.gpi-footer-bottom{background:#292b2e;border-top:1px solid #ffffff16;font-size:12px;color:#c4c5c9}
+.gpi-footer-bottom>.container{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:19px 0}
+/* Consistent online form and warta images */
+.connect-option{background:#2d3f87!important;border-radius:12px!important;color:#fff!important}
+.connect-option strong,.connect-option small,.connect-option .connect-chevron{color:white!important}
+.warta-media{margin:0 0 15px;border-radius:12px;overflow:hidden;background:#e9eef4;aspect-ratio:16/9}
+.warta-media img,.warta-media video{width:100%;height:100%;object-fit:cover;display:block}
+.warta-media video{background:#111}
+.warta-type{display:inline-flex;padding:5px 10px;background:#e5eff8;color:#174f78;border-radius:20px;margin:10px 0;font-size:12px;font-weight:800}
+@media(max-width:1180px){.refresh-nav .official-links{gap:12px}.refresh-nav .official-links a{font-size:12px!important}.refresh-nav>.container{width:calc(100% - 34px)}.gpi-footer-inner{grid-template-columns:1fr}.gpi-footer-columns{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.refresh-nav>.container{min-height:76px}.refresh-nav .nav-toggle{display:block;color:#fff;background:#ffffff18;border-radius:8px}.refresh-nav .official-links{position:absolute;top:100%;left:16px;right:16px;display:none!important;padding:15px;background:#191d23;border:1px solid #ffffff2b;box-shadow:0 15px 40px #0005;border-radius:0 0 15px 15px;flex-direction:column;align-items:stretch;gap:0;max-height:75vh;overflow:auto}.refresh-nav .official-links.show{display:flex!important}.refresh-nav .official-links a{font-size:14px!important;padding:13px!important;border-bottom:1px solid #ffffff16}.gpi-footer-columns{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.refresh-nav .official-brand strong{font-size:16px!important}.refresh-nav .official-brand small{font-size:10px}.refresh-nav>.container{width:calc(100% - 28px)}.refresh-nav .official-brand img{width:42px;height:42px}.gpi-footer-inner{padding:48px 0 36px}.gpi-footer-columns{grid-template-columns:repeat(2,minmax(0,1fr));gap:25px 16px}.gpi-footer-col h3{margin-bottom:6px}.gpi-footer-col{gap:10px}.gpi-footer-col a{font-size:13px}.gpi-footer-bottom>.container{padding:17px 0}.welcome-hero{min-height:590px}.home-schedule-item{gap:12px}}
+@media(prefers-reduced-motion:reduce){.welcome-visual{animation:none!important}}

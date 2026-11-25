@@ -1,0 +1,13 @@
+<%- public_head("Pendalaman Alkitab — GPI Cipayung", s) %>
+<body>
+<%- public_header(s, 'pelayanan') %>
+<header class="page-hero compact-hero"><div class="container">
+  <div><span class="label">Pendalaman Alkitab</span><h1>Ruang Belajar Firman Tuhan</h1><p>Konten rohani Kristen berupa cerita Alkitab, renungan, materi animasi anak, foto kegiatan, dan bahan pembinaan iman jemaat.</p></div>
+  <img data-logo-gereja src="<%- pv_esc(pv_logo(s)) %>" alt="Logo <%- pv_esc(s['nama_gereja']) %>">
+</div></header>
+<div class="breadcrumb-row"><div class="container"><a href="/">Beranda</a> / <a href="pelayanan">Pelayanan</a> / Pendalaman Alkitab</div></div>
+<section class="section"><div class="container">
+  <div class="section-center"><span class="label">Cerita • Renungan • Animasi • Foto</span><h2>Materi Pendalaman Alkitab</h2><div class="divider"></div><p class="lead">Materi pada halaman ini dapat ditambah, diedit, dan dihapus dari dashboard admin menu Pendalaman Alkitab.</p></div>
+  <div id="pendalamanGrid" class="pa-grid"><%- render_pendalaman_alkitab(data['pendalaman_alkitab'] ?? []) %></div>
+</div></section>
+<%- public_footer(s) %>

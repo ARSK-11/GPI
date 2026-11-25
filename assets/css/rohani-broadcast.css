@@ -1,0 +1,77 @@
+/* Renungan dan flyer: poster utuh, video 16:9, ukuran adaptif tanpa crop */
+.rohani-hero{padding:clamp(75px,9vw,140px) 0 clamp(65px,8vw,120px);background:linear-gradient(118deg,rgba(9,24,37,.91),rgba(14,64,104,.82)),url('/assets/img/cover-ibadah-gpi-cipayung.jpeg') center/cover;color:#fff}
+.rohani-hero .eyebrow{color:#c2def0;letter-spacing:.18em;font-weight:800}
+.rohani-hero h1{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-weight:800;font-size:clamp(2.6rem,6vw,5.6rem);letter-spacing:-.06em;line-height:1.04;margin:20px 0}
+.rohani-hero h1 em{font-family:Georgia,serif;letter-spacing:-.03em;font-weight:400}
+.rohani-hero p{max-width:700px;font-size:clamp(1rem,1.6vw,1.23rem);line-height:1.75;color:#dfebf4}
+.rohani-public-section{padding:clamp(36px,6vw,80px) 0;background:#f6f8fa;min-height:55vh}
+.rohani-section-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:28px;flex-wrap:wrap}
+.rohani-section-heading h2{font-size:clamp(2rem,3.2vw,3rem);letter-spacing:-.05em;margin:8px 0 0;color:#11283d}
+.rohani-section-heading label{display:block;font-weight:700;font-size:.85rem;color:#536b7d;margin-bottom:8px}
+.rohani-section-heading select{border:1px solid #cbd6e1;background:white;border-radius:12px;min-height:46px;padding:10px 36px 10px 14px;max-width:100%}
+.rohani-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:24px}
+.rohani-card{background:#fff;border:1px solid #e2eaf0;box-shadow:0 9px 32px rgba(22,48,68,.06);border-radius:20px;overflow:hidden;height:100%;display:flex;flex-direction:column}
+.rohani-media{width:100%;min-width:0;display:grid;place-items:center;overflow:hidden;background:#e6edf4}
+.rohani-media.is-poster{aspect-ratio:3/4}
+.rohani-media.is-video{aspect-ratio:16/9}
+.rohani-media img,.rohani-media iframe,.rohani-media video{display:block;width:100%;height:100%;border:0}
+.rohani-media img{object-fit:contain;background:#edf1f5}
+.rohani-media iframe{background:#fff}
+.rohani-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:72px;color:#2a537e;background:linear-gradient(150deg,#f0f4f8,#dce8f3)}
+.rohani-fallback small{font-size:14px;letter-spacing:.2em}
+.rohani-content{padding:24px;flex:1;display:flex;flex-direction:column;gap:12px;color:#21394a}
+.rohani-content h3{font-size:clamp(1.12rem,1.5vw,1.45rem);line-height:1.4;margin:0}
+.rohani-type{display:inline-block;align-self:flex-start;background:#eaf3fc;color:#18507e;font-size:.76rem;letter-spacing:.04em;font-weight:800;border-radius:9px;padding:7px 10px}
+.rohani-verse{color:#2b658c;font-weight:700;margin:0}
+.rohani-description{white-space:normal;line-height:1.65;overflow-wrap:anywhere;color:#506276;margin:0}
+.rohani-content a{color:#0a5488;font-weight:800;margin-top:auto;text-decoration:underline;text-underline-offset:4px}
+.rohani-date{margin:0;color:#60768b;font-size:.83rem;font-weight:700}
+.rohani-empty{padding:50px;text-align:center;border:1px solid #dce4ed;background:#fff;border-radius:20px}
+.rohani-subscribe-note{padding:24px 28px;border-radius:16px;background:#e5eef6;color:#26475f;margin-top:32px}
+.rohani-subscribe-note h3{margin:0 0 8px}.rohani-subscribe-note p{margin:0;line-height:1.8}
+.rohani-home-teaser{background:#eef4f8}.rohani-home-teaser p{font-size:1.08rem;max-width:690px;line-height:1.8;margin:12px 0 20px;color:#506679}
+.rohani-admin-section .rohani-alert{padding:14px 20px;border-radius:12px;border:1px solid #ead5ac;background:#fff8ea;color:#745020;line-height:1.7;margin:15px 0 24px}
+.rohani-admin-section .rohani-alert.configured{background:#e9f6ef;color:#165a38;border-color:#b4e7ce}
+.rohani-admin-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:22px;align-items:start}
+.rohani-panel{background:#fff;border-radius:18px;border:1px solid #dce5ed;padding:clamp(16px,2.5vw,28px);margin:0 0 20px;min-width:0;box-shadow:0 7px 22px rgba(13,42,67,.04)}
+.rohani-admin-layout .rohani-panel{margin-bottom:0}
+.rohani-panel h3{font-size:1.32rem;margin:0 0 18px;color:#102e46}
+.rohani-panel h4{margin:12px 0 6px;line-height:1.35}
+.rohani-panel label:not(.rohani-optin){display:flex;flex-direction:column;gap:6px;font-size:.9rem;font-weight:700;margin:0 0 14px;color:#21435e}
+.rohani-panel input:not([type=checkbox]),.rohani-panel textarea,.rohani-panel select{border:1px solid #cfdce7;border-radius:10px;padding:12px 13px;background:#fff;color:#18354d;font:inherit;min-width:0;width:100%;max-width:100%;box-sizing:border-box}
+.rohani-panel textarea{resize:vertical;line-height:1.6}
+.rohani-panel label small,.rohani-panel .muted{color:#64798b;font-size:.84rem;line-height:1.6;font-weight:400}
+.rohani-buttons,.rohani-item-actions{display:flex;gap:10px;flex-wrap:wrap}
+.rohani-live-preview{max-width:450px;margin:0 auto}
+.rohani-live-shell{border:1px solid #e1eaf1;border-radius:14px;overflow:hidden;padding:15px;background:#fbfcfe;overflow-wrap:anywhere}
+.rohani-live-shell>.rohani-media,.rohani-live-shell>div>.rohani-media{max-width:100%;margin-bottom:14px}
+.rohani-live-shell small{font-weight:800;color:#316488}.rohani-live-shell>p{white-space:pre-wrap;color:#5c6b77;line-height:1.6}
+.rohani-preview-empty{padding:70px 20px;text-align:center;background:#edf4fa;border-radius:14px;color:#61798e}
+.rohani-list{max-height:520px;overflow-y:auto;scrollbar-width:thin}
+.rohani-list-item{border-bottom:1px solid #e5ebf1;padding:15px 2px;display:flex;gap:14px;align-items:flex-start;justify-content:space-between;color:#284359}
+.rohani-list-item:last-child{border-bottom:0}
+.rohani-list-item strong{display:block;color:#112e45;line-height:1.5;overflow-wrap:anywhere}
+.rohani-list-item small{display:block;color:#657a8a;margin:5px 0;line-height:1.5}
+.rohani-list-item p{font-size:.88rem;line-height:1.55;margin:7px 0;overflow-wrap:anywhere}
+.rohani-list-item button{border:1px solid #c8dae7;background:#eef5fa;border-radius:8px;padding:8px 10px;white-space:nowrap;color:#114872;font-weight:700;cursor:pointer}
+.rohani-panel-head{display:flex;align-items:center;justify-content:space-between;gap:15px}.rohani-panel-head h3{margin-bottom:12px}
+.rohani-categories{border:1px solid #d7e3ee;border-radius:12px;padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 0 15px}
+.rohani-categories legend{font-weight:800;color:#254c67}
+.rohani-panel .rohani-categories label{display:flex;flex-direction:row;align-items:center;margin:0;font-size:.84rem;font-weight:600;gap:6px}
+.rohani-optin{display:flex;align-items:flex-start;gap:9px;margin:16px 0;font-weight:700;font-size:.84rem;line-height:1.5}
+.rohani-audience{background:#eef4fa;color:#205477;border-radius:9px;padding:12px 14px;font-weight:800}
+.rohani-error{font-weight:700;color:#b22929}.rohani-success{font-weight:700;color:#24764d}
+.rohani-table-wrap{max-width:100%;overflow:auto}.rohani-table{width:100%;border-collapse:collapse;min-width:700px}
+.rohani-table th,.rohani-table td{text-align:left;border-bottom:1px solid #e7edf3;padding:11px 13px;vertical-align:top;font-size:.88rem;line-height:1.5}
+.rohani-table th{background:#f1f6fa;color:#234a67;font-weight:800}.rohani-table td small{display:block;color:#728391}
+[data-rohani-kind][hidden]{display:none!important}
+@media(max-width:1100px){.rohani-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rohani-admin-layout{grid-template-columns:1fr}}
+@media(max-width:700px){.rohani-grid{grid-template-columns:1fr}.rohani-section-heading select{width:100%}.rohani-section-heading>div:last-child{width:100%}.rohani-admin-section .rohani-panel{padding:17px}.rohani-categories{grid-template-columns:1fr}.rohani-list-item{flex-direction:column}.rohani-list-item button{white-space:normal}}
+
+/* Navigasi website tetap lapang ketika menu Renungan ditambahkan. */
+@media(max-width:1250px){
+ .refresh-nav .nav-toggle{display:block!important;margin-left:auto}
+ .refresh-nav .official-links{position:absolute!important;top:84px;left:18px;right:18px;z-index:110;display:none!important;flex-direction:column;align-items:stretch;max-height:calc(100vh - 100px);overflow:auto;background:#13191f!important;border:1px solid #ffffff33;padding:18px!important;border-radius:0 0 18px 18px;box-shadow:0 20px 40px #06111bb5}
+ .refresh-nav .official-links.show{display:flex!important}
+ .refresh-nav .official-links a{padding:10px 15px!important}
+}

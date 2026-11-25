@@ -1,15 +1,31 @@
 {
-    "name": "percobaan",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "start": "nodemon index.js"
-    },
-    "license": "ISC",
-    "dependencies": {
-        "ejs": "^7.0.2",
-        "express": "^5.3.0",
-        "nodemon": "^3.1.14"
-    }
+  "name": "gpi-cipayung-js",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Migrasi PHP GPI Cipayung ke Node.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "bot:install": "npm install --prefix app",
+    "cron": "node whatsapp-cron.js",
+    "reset-password": "node scripts/reset-password.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "mysql2": "^3.12.0",
+    "ejs": "^3.1.10",
+    "bcryptjs": "^3.0.2",
+    "multer": "^2.0.2",
+    "dotenv": "^16.4.7",
+    "csv-parse": "^5.6.0",
+    "csv-stringify": "^6.5.2",
+    "express-mysql-session": "^3.0.3",
+    "sharp": "^0.34.0",
+    "exceljs": "^4.4.0"
+  }
 }

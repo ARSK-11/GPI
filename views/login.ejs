@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Internal — <%- e(APP_NAME) %></title>
+  <link rel="icon" type="image/jpeg" href="assets/img/logo-gpi-cipayung.jpg">
+  <link rel="apple-touch-icon" href="assets/img/logo-gpi-cipayung.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=<%- e(assetVersion) %>">
+</head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-panel">
+      <a class="brand login-brand" href="/"><img class="login-logo" src="assets/img/logo-gpi-cipayung.jpg" alt="Logo GPI Cipayung"><span><b>GPI Cipayung</b><small>Gereja Pentakosta Indonesia</small></span></a>
+      <h1>Selamat Datang</h1>
+      <p class="login-subtitle">Masuk hanya untuk Koordinator, Pengurus dan Pendeta.</p>
+      <% if (error) { %><div class="alert danger"><%- e(error) %></div><% } %>
+      <form method="post" class="form" autocomplete="on">
+        <input type="hidden" name="csrf_token" value="<%- e(csrf) %>">
+        <label>Username<input name="username" autocomplete="username" required autofocus></label>
+        <label>Password
+          <span class="password-field">
+            <input id="passwordInput" name="password" type="password" placeholder="Masukkan password" autocomplete="current-password" required>
+            <button class="password-toggle" type="button" aria-label="Tampilkan password" data-toggle-password>
+              <svg viewBox="0 0 24 24" class="icon"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </span>
+        </label>
+        <button class="btn full" type="submit">Masuk Dashboard</button>
+        <a class="btn ghost full" href="/">Kembali ke Website Umum</a>
+      </form>
+    </section>
+  </main>
+  <script>
+    document.querySelector('[data-toggle-password]')?.addEventListener('click', function(){
+      const input = document.getElementById('passwordInput');
+      const showing = input.type === 'text';
+      input.type = showing ? 'password' : 'text';
+      this.setAttribute('aria-label', showing ? 'Tampilkan password' : 'Sembunyikan password');
+    });
+  </script>
+</body>
+</html>

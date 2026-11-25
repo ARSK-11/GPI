@@ -1,0 +1,63 @@
+/* Dokumentasi ibadah • GPI Cipayung */
+.service-docs{background:#f7f9fc;color:#152333}
+.service-docs .container{max-width:1220px}
+.service-docs-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:30px}
+.service-docs-heading h2{font-size:clamp(2.1rem,4.1vw,4rem);letter-spacing:-.05em;line-height:1.13;margin:.6rem 0 1rem}
+.service-docs-heading p{max-width:690px;color:#586a7a;line-height:1.7;margin:0}
+.service-docs-count{background:#e4eff9;border-radius:99px;padding:8px 16px;white-space:nowrap;color:#174e80;font-weight:700}
+.service-docs-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:25px}
+.service-docs-filters button{border-radius:99px;padding:11px 21px;font:inherit;background:white;border:1px solid #d8e0e8;color:#18334f;cursor:pointer;transition:background .15s,color .15s}
+.service-docs-filters button:hover,.service-docs-filters .is-active{background:#124d79;color:white;border-color:#124d79}
+.service-docs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-bottom:55px}
+.service-doc-card{border-radius:18px;overflow:hidden;background:#fff;border:1px solid #e0e7ed;box-shadow:0 8px 22px rgba(17,39,58,.06);transition:transform .2s,box-shadow .2s}
+.service-doc-card:hover{transform:translateY(-3px);box-shadow:0 14px 35px rgba(17,39,58,.12)}
+.service-doc-card[hidden]{display:none}
+.service-doc-media{aspect-ratio:4/3;background:#dce5eb;overflow:hidden;position:relative}
+.service-doc-media>a:not(.service-doc-pdf){display:block;width:100%;height:100%}
+.service-doc-media img,.service-doc-media video,.service-doc-media iframe{width:100%;height:100%;object-fit:cover;display:block;border:0}
+.service-doc-pdf{display:flex;height:100%;width:100%;align-items:center;justify-content:center;flex-direction:column;gap:18px;background:linear-gradient(130deg,#18354e,#124d79);color:white!important;text-decoration:none}
+.service-doc-pdf span{font-size:3.1rem;font-weight:800;letter-spacing:-.07em}
+.service-doc-pdf strong{font-size:.9rem}
+.service-doc-info{padding:20px 21px 24px}
+.service-doc-info>span{font-weight:750;font-size:.69rem;letter-spacing:.1em;color:#0b5a9b}
+.service-doc-info h3{font-size:1.15rem;line-height:1.4;margin:8px 0;overflow-wrap:anywhere}
+.service-doc-info p{font-size:.91rem;color:#596b7d;line-height:1.55;margin:4px 0}
+.service-drive-section{border-top:1px solid #d9e2eb;padding-top:34px;margin-top:36px}
+.service-drive-heading{display:flex;align-items:center;justify-content:space-between;gap:25px;margin-bottom:24px}
+.service-drive-heading h3{font-size:clamp(1.55rem,3vw,2.4rem);margin:.55rem 0;letter-spacing:-.04em}
+.service-drive-heading p{margin:0;color:#5c6e7e}
+.service-drive-heading a{white-space:nowrap}
+.service-drive-embed{padding:13px;background:#fff;border:1px solid #e0e7ed;border-radius:18px}
+.service-drive-embed iframe{display:block;width:100%;height:min(590px,68vh);min-height:360px;border:0;border-radius:12px;background:#f2f5f9}
+.service-drive-embed p{font-size:.85rem;margin:12px 10px 4px;line-height:1.6;color:#677789}
+.service-drive-native{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.service-drive-native article{background:white;border:1px solid #dfe6ee;border-radius:14px;overflow:hidden}
+.service-drive-native a{display:block;text-decoration:none;color:inherit}
+.service-drive-native .thumb{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:#dce7f0;color:#164c73;font-size:1.3rem;font-weight:800;overflow:hidden}
+.service-drive-native img{width:100%;height:100%;object-fit:cover}
+.service-drive-native p{font-size:.88rem;padding:12px 13px;margin:0;overflow-wrap:anywhere}
+.service-drive-native:not([hidden])+.service-drive-embed{margin-top:18px}
+.docs-admin-section{margin-top:34px;padding-top:22px;border-top:1px solid #dce6f0}
+.docs-admin-filters{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0 22px}
+.docs-admin-filters select{max-width:370px;width:100%;padding:11px 14px;border:1px solid #ccd7df;border-radius:10px;background:white;font:inherit}
+.docs-admin-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.docs-admin-card{padding:18px;border:1px solid #dfe7ee;border-radius:16px;background:white;min-width:0}
+.docs-admin-card h3{font-size:1.05rem;line-height:1.45;margin:12px 0 7px;overflow-wrap:anywhere}
+.docs-admin-card p{font-size:.87rem;line-height:1.55;color:#526476;margin:0 0 15px}
+.docs-admin-card .doc-source{font-size:.72rem;letter-spacing:.06em;color:#13588b;font-weight:750}
+.docs-admin-card .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.docs-admin-dialog{width:min(720px,calc(100vw - 24px));max-height:calc(100vh - 30px);border:0;border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.25);padding:26px}
+.docs-admin-dialog::backdrop{background:rgba(0,16,33,.64)}
+.docs-admin-dialog form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin-top:20px}
+.docs-admin-dialog label{display:grid;gap:8px;min-width:0;font-size:.91rem;font-weight:650}
+.docs-admin-dialog label.full{grid-column:1/-1}
+.docs-admin-dialog input,.docs-admin-dialog textarea,.docs-admin-dialog select{font:inherit;padding:11px 12px;border-radius:10px;border:1px solid #ccd7df;width:100%;min-width:0;background:#fff}
+.docs-admin-dialog [hidden]{display:none!important}
+.docs-admin-dialog .docs-hint{font-size:.8rem;color:#647485;font-weight:400;line-height:1.55}
+.docs-admin-dialog .docs-form-actions{grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.docs-admin-dialog #docFormMessage{color:#a42626}
+@media(max-width:900px){.service-docs-grid,.docs-admin-list{grid-template-columns:repeat(2,minmax(0,1fr))}.service-drive-native{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.service-docs-heading,.service-drive-heading{align-items:flex-start;flex-direction:column}.service-docs-grid,.docs-admin-list{grid-template-columns:1fr}.service-drive-native{grid-template-columns:repeat(2,minmax(0,1fr))}.service-drive-embed iframe{min-height:340px;height:450px}.docs-admin-dialog form{grid-template-columns:1fr}.docs-admin-dialog{padding:19px}.service-docs-count{display:none}}
+@media(prefers-reduced-motion:reduce){.service-doc-card{transition:none}}
+.service-drive-native[hidden]{display:none}
+.service-doc-open{display:inline-block;margin-top:13px;color:#12558c;font-size:.86rem;font-weight:750;text-decoration:none}.service-doc-open:hover{text-decoration:underline}

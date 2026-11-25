@@ -1,0 +1,8 @@
+{
+  "name": "gpi-cipayung-whatsapp-web",
+  "private": true,
+  "dependencies": {
+    "qrcode": "1.5.4",
+    "whatsapp-web.js": "1.34.8"
+  }
+}

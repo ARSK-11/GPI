@@ -1,0 +1,2 @@
+Fresh 3.0 — paket update berisi file relatif terhadap folder GPI_CIPAYUNG_JS.
+Baca UPDATE_FRESH_3.md. Jangan menimpa .env, uploads, atau database yang sudah ada.

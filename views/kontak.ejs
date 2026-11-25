@@ -1,0 +1,48 @@
+<%- public_head("Terhubung — GPI Cipayung", s) %>
+<body>
+<%- public_header(s, 'kontak') %>
+<main id="main-content" class="connect-page">
+<header class="connect-hero"><div class="container"><span class="eyebrow">GPI Cipayung · Terhubung</span><h1>Formulir Online</h1><p>Kami ada untuk Anda. Mari melangkah dan bertumbuh bersama dalam iman.</p></div></header>
+<section class="connect-content"><div class="connect-wrap"><span class="eyebrow">Langkah berikutnya</span><h2>Ya, saya ingin:</h2><p class="connect-intro">Pilih salah satu kebutuhan di bawah ini, lalu lengkapi formulir yang muncul.</p>
+<form id="connectForm" action="/api?action=public_connect" method="post">
+<input type="hidden" name="csrf_token" value="<%- pv_esc(data.csrf_token||'') %>">
+<fieldset class="connect-options"><legend class="sr-only">Jenis permohonan</legend>
+<% for(const [key,item] of Object.entries(data.connectChoices||connectChoices)){ %>
+<label class="connect-option"><input type="radio" name="kategori" value="<%- pv_esc(key) %>" required data-prompt="<%- pv_esc(item.prompt) %>"><span><strong><%- pv_esc(item.label) %></strong><small><%- pv_esc(item.description) %></small></span><span class="connect-chevron" aria-hidden="true">→</span></label>
+<% } %>
+</fieldset>
+<div id="connectDetails" hidden>
+<div class="connect-selected" id="connectSelected" aria-live="polite"></div>
+<div id="commitmentPrayer" class="connect-prayer" hidden><span class="eyebrow">Doa komitmen</span><h3>Memulai perjalanan bersama Yesus.</h3><p>Tuhan Yesus, terima kasih atas kasih dan pengampunan-Mu. Aku membuka hatiku bagi-Mu dan menyerahkan hidupku kepada-Mu. Bimbing aku untuk mengikuti kehendak-Mu setiap hari. Amin.</p></div>
+<div id="marriageFields" class="connect-marriage" hidden>
+ <p class="marriage-warning" role="note"><span aria-hidden="true">⚠</span> Format pengajuan ini bukanlah formulir pendaftaran. Jadwal pemberkatan akan dikonfirmasi oleh pengurus gereja.</p>
+ <p class="connect-intro">Silakan isi formulir ini</p>
+ <div class="connect-fields marriage-grid">
+  <label class="full">NIJ / NIJ Anda atau pasangan *<input name="nij_pasangan" maxlength="160" placeholder="NIJ / NIJ Anda atau pasangan" disabled></label>
+  <label class="full">CG Anda atau pasangan *<input name="cg_pasangan" maxlength="160" placeholder="CG Anda atau pasangan / kelompok persekutuan" disabled></label>
+  <label class="full">Aktif CG Sejak *<input name="aktif_cg_sejak" maxlength="100" placeholder="Contoh: Januari 2024" disabled></label>
+  <label class="full">Rencana Tanggal Pernikahan *<input type="date" name="tanggal_pernikahan" disabled></label>
+ </div>
+</div>
+<h3 class="connect-form-title">Lengkapi informasi Anda</h3><p class="connect-intro">Tanda * berarti wajib diisi. Isi minimal salah satu kontak WhatsApp atau email.</p>
+<div class="connect-fields">
+<label class="full">Nama lengkap *<input name="nama" autocomplete="name" maxlength="160" required placeholder="Nama lengkap"></label>
+<label>Jenis kelamin (opsional)<select name="jenis_kelamin"><option value="">Pilih jenis kelamin</option><option>Pria</option><option>Wanita</option><option>Tidak ingin menyebutkan</option></select></label>
+<label>Usia (opsional)<input type="number" name="usia" min="0" max="120" placeholder="Usia"></label>
+<label>No. WhatsApp<input type="tel" name="kontak" maxlength="40" autocomplete="tel" placeholder="08xxxxxxxxxx"></label>
+<label>Email<input type="email" name="email" maxlength="160" autocomplete="email" placeholder="nama@email.com"></label>
+<label class="full">Kota / Negara *<input name="kota" maxlength="160" required autocomplete="address-level2" placeholder="Kota atau negara tempat tinggal"></label>
+<label class="full"><span id="connectPrompt">Ceritakan kebutuhan Anda</span><textarea name="pesan" rows="5" maxlength="5000" placeholder="Tuliskan di sini..."></textarea></label>
+</div>
+<div id="commitmentNext" class="connect-next" hidden><p>Langkah selanjutnya yang juga Anda minati:</p><label><input type="checkbox" name="minat_baptis" value="1"> Saya ingin dibaptis</label></div>
+<div class="connect-trap" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+<label class="connect-consent"><input type="checkbox" name="persetujuan" value="1" required><span>Saya menyetujui penggunaan informasi ini oleh Admin, Majelis/Pengurus, dan Pendeta GPI Cipayung untuk menindaklanjuti permohonan saya. Data tidak ditampilkan kepada publik.</span></label>
+<button class="refresh-button connect-submit" type="submit">Kirim formulir <span aria-hidden="true">↗</span></button>
+<p id="connectMsg" class="connect-feedback" role="status" aria-live="polite"></p>
+</div>
+<noscript><p>Aktifkan JavaScript untuk mengisi formulir online.</p></noscript>
+</form><p id="connectSuccess" class="connect-feedback" role="status" hidden></p>
+</div></section>
+<section class="refresh-section news-section"><div class="container connect-contacts"><div><span class="eyebrow">Kontak resmi</span><h2>Mari tetap terhubung.</h2></div><div><p>Jl. Tengki No.78 RT.4/RW.3 Cipayung, Jakarta Timur</p><p><a href="https://wa.me/6281315490602" target="_blank" rel="noopener">081315490602</a> · <a href="https://wa.me/6288214498018" target="_blank" rel="noopener">088214498018</a></p><a href="mailto:gpisidangcipayung@gmail.com">gpisidangcipayung@gmail.com</a></div></div></section>
+</main>
+<%- public_footer(s) %>
