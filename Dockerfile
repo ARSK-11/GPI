@@ -2,7 +2,6 @@
 FROM node:22-bookworm-slim
 
 ENV NODE_ENV=production \
-    PORT=3000 \
     TZ=Asia/Jakarta \
     PUPPETEER_CACHE_DIR=/home/node/.cache/puppeteer
 
