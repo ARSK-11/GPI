@@ -205,5 +205,6 @@ async function connectAndWait(seconds = 120) {
 }
 
 const shutdown = () => bot.shutdown();
+const disconnect = () => bot.shutdown();
 
-module.exports = { preview, announcement, cron, sendTest, status, saveGroup, groups, connect, connectAndWait, shutdown, message, cleanPhone, contacts, ready };
+module.exports = { preview, announcement, cron, sendTest, status, saveGroup, groups, connect, connectAndWait, shutdown, disconnect, message, cleanPhone, contacts, ready };

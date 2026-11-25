@@ -20,6 +20,7 @@ if (process.env.WA_LINKED_NO_SANDBOX === '1' || (process.platform !== 'win32' &&
 }
 let client;
 let closing;
+let runId = 0;
 let state = { phase: 'idle' };
 
 function error(message, status) {
@@ -100,7 +101,20 @@ async function destroy(active) {
   } catch {
     // Listener cleanup is best-effort.
   }
-  await active.destroy().catch(() => {});
+  let timer;
+  await Promise.race([
+    active.destroy().catch(() => {}),
+    new Promise(resolve => { timer = setTimeout(resolve, 10000); timer.unref(); })
+  ]);
+  clearTimeout(timer);
+  // A hung browser can outlive its Puppeteer client and keep the profile lock,
+  // which makes every following connection attempt fail.
+  try {
+    const proc = active.pupBrowser?.process?.();
+    if (proc && proc.exitCode === null) proc.kill('SIGKILL');
+  } catch {
+    // The browser is already gone.
+  }
 }
 
 function close(active, phase, message) {
@@ -146,6 +160,7 @@ function start() {
 
 function launch(dependencies, [executablePath, ...remainingBrowsers], args = browserArgs, cacheReset = false) {
   const { Client, LocalAuth, QRCode, dataPath } = dependencies;
+  const run = ++runId;
   const active = new Client({
     authStrategy: new LocalAuth({ dataPath, clientId: 'gpi-cipayung' }),
     puppeteer: { headless: true, executablePath, pipe: true, timeout: 15000, protocolTimeout: 30000, args },
@@ -172,7 +187,7 @@ function launch(dependencies, [executablePath, ...remainingBrowsers], args = bro
         clearWebCache(dataPath);
         closing = destroy(active).finally(() => {
           closing = undefined;
-          if (!client) launch(dependencies, [executablePath, ...remainingBrowsers], args, true);
+          if (!client && run === runId) launch(dependencies, [executablePath, ...remainingBrowsers], args, true);
         });
         return;
       }
@@ -316,11 +331,13 @@ async function sendToPhone(phone, message) {
 }
 
 async function shutdown() {
+  // Cancel any pending relaunch so a stuck connection cannot come back on its own.
+  runId++;
   const active = client;
-  if (!active) return;
   client = undefined;
   state = { phase: 'idle' };
-  await destroy(active);
+  if (active) await destroy(active);
+  if (closing) await closing;
 }
 
 module.exports = { start, groups, destination, send, sendToGroup, sendToPhone, shutdown, status: () => state };

@@ -354,6 +354,8 @@ async function loadBotStatus() {
       btn.textContent = botState.phase === 'ready' ? 'Bot Terhubung' : botState.phase === 'starting' ? 'Menyiapkan…' : botState.phase === 'qr' ? 'Tampilkan QR Lagi' : 'Hubungkan WhatsApp';
       btn.disabled = botState.phase === 'ready' || botState.phase === 'starting';
     }
+    const off = $('#waBotDisconnect');
+    if (off) off.disabled = !botState.phase || botState.phase === 'idle';
     const info = $('#waBotGroupInfo');
     if (info) info.textContent = botState.group?.id ? `Grup aktif: ${botState.group.name || botState.group.id}` : 'Belum ada grup tujuan yang disimpan.';
     const select = $('#waBotGroup');
@@ -375,6 +377,21 @@ async function connectBot() {
   } catch (err) {
     notify(err.message, 'danger');
     if (btn) btn.disabled = false;
+  }
+}
+
+async function disconnectBot() {
+  const btn = $('#waBotDisconnect');
+  if (btn) { btn.disabled = true; btn.textContent = 'Memutuskan…'; }
+  try {
+    await api('wa_bot_disconnect', { method:'POST', body: new FormData() });
+    notify('Koneksi bot WhatsApp diputuskan. Klik Hubungkan WhatsApp untuk memulai ulang.');
+    await loadBotStatus();
+  } catch (err) {
+    notify(err.message, 'danger');
+    if (btn) btn.disabled = false;
+  } finally {
+    if (btn) btn.textContent = 'Putuskan';
   }
 }
 
@@ -1545,6 +1562,7 @@ function attachEvents() {
   });
   $('#waBotRefresh')?.addEventListener('click', () => { loadBotStatus(); loadWhatsappLogs(); });
   $('#waBotConnect')?.addEventListener('click', connectBot);
+  $('#waBotDisconnect')?.addEventListener('click', disconnectBot);
   $('#waBotLoadGroups')?.addEventListener('click', loadBotGroups);
   $('#waBotSaveGroup')?.addEventListener('click', saveBotGroup);
   $('#waBotTest')?.addEventListener('click', sendBotTest);
