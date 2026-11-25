@@ -46,6 +46,24 @@ function browserPaths() {
   return [...new Set(installed)];
 }
 
+function sandboxBlocked(err) {
+  return /No usable sandbox|SUID sandbox|zygote_host|Failed to move to new namespace|Running as root without --no-sandbox/i.test(String(err?.message || ''));
+}
+
+// A cached WhatsApp Web build (service worker) from an older pin or from an interrupted
+// launch can keep WAWebSocketModel UNLAUNCHED, so whatsapp-web.js never emits qr.
+// Clear only the browser cache; the linked session (cookies/Local Storage) stays intact.
+function clearWebCache(dataPath) {
+  const profile = path.join(dataPath, 'session-gpi-cipayung', 'Default');
+  for (const name of ['Service Worker', 'Service Worker CacheStorage']) {
+    try {
+      fs.rmSync(path.join(profile, name), { recursive: true, force: true });
+    } catch {
+      // A missing or locked cache must not abort the retry.
+    }
+  }
+}
+
 function startupError(active, err) {
   const detail = String(err?.message || '');
   if (/already running|profile.*in use|SingletonLock|ProcessSingleton/i.test(detail)) {
@@ -61,17 +79,35 @@ function startupError(active, err) {
     const code = detail.match(/net::ERR_[A-Z0-9_]+/i)?.[0];
     return `Browser tidak dapat membuka web.whatsapp.com (${code}). Periksa koneksi atau pengaturan jaringan.`;
   }
+  if (/Could not find Chrome|Could not find expected browser/i.test(detail)) {
+    return 'Chrome/Edge untuk bot tidak ditemukan. Pasang browser, jalankan ulang npm install --prefix app, atau isi WA_LINKED_BROWSER_PATH.';
+  }
   if (!active.pupBrowser) {
-    return 'Puppeteer tidak berhasil membuka browser. Periksa akses Chrome atau Edge dari terminal Windows.';
+    const reason = (detail.split('\n').map(line => line.trim()).find(line => line && !line.startsWith('#')) || detail).slice(0, 180);
+    const hint = process.platform === 'win32'
+      ? 'Periksa akses Chrome atau Edge dari terminal Windows.'
+      : 'Periksa Chrome/Chromium yang terpasang dan izin menjalankannya dari terminal.';
+    return 'Puppeteer tidak berhasil membuka browser. ' + hint + (reason ? ' Detail: ' + reason : '');
   }
   return 'Browser terbuka, tetapi WhatsApp Web gagal disiapkan. Periksa apakah web.whatsapp.com bisa dibuka di browser.';
+}
+
+async function destroy(active) {
+  // whatsapp-web.js keeps an async framenavigated listener that evaluates on the page;
+  // it rejects when the page is closed mid-navigation and crashes the process.
+  try {
+    active.pupPage?.removeAllListeners?.('framenavigated');
+  } catch {
+    // Listener cleanup is best-effort.
+  }
+  await active.destroy().catch(() => {});
 }
 
 function close(active, phase, message) {
   if (client !== active) return;
   client = undefined;
   state = { phase, message };
-  closing = Promise.resolve().then(() => active.destroy()).catch(() => {}).finally(() => {
+  closing = Promise.resolve().then(() => destroy(active)).catch(() => {}).finally(() => {
     closing = undefined;
   });
 }
@@ -108,11 +144,11 @@ function start() {
   return launch({ Client, LocalAuth, QRCode, dataPath }, browsers);
 }
 
-function launch(dependencies, [executablePath, ...remainingBrowsers]) {
+function launch(dependencies, [executablePath, ...remainingBrowsers], args = browserArgs, cacheReset = false) {
   const { Client, LocalAuth, QRCode, dataPath } = dependencies;
   const active = new Client({
     authStrategy: new LocalAuth({ dataPath, clientId: 'gpi-cipayung' }),
-    puppeteer: { headless: true, executablePath, pipe: true, timeout: 15000, protocolTimeout: 30000, args: browserArgs },
+    puppeteer: { headless: true, executablePath, pipe: true, timeout: 15000, protocolTimeout: 30000, args },
     webVersion,
     webVersionCache,
     qrMaxRetries: 8,
@@ -120,10 +156,31 @@ function launch(dependencies, [executablePath, ...remainingBrowsers]) {
   });
   client = active;
   state = { phase: 'starting' };
-  const startupTimer = setTimeout(() => {
-    close(active, 'error', 'WhatsApp Web belum siap setelah 90 detik. Periksa akses ke web.whatsapp.com, lalu coba lagi.');
-  }, 90000);
-  startupTimer.unref();
+  let startupTimer;
+  // Every path that leaves the bot in 'starting' must keep a watchdog, otherwise a
+  // stalled WhatsApp Web page leaves the dashboard on "Menyiapkan…" forever.
+  const armStartupTimer = (ms = 90000) => {
+    clearTimeout(startupTimer);
+    startupTimer = setTimeout(async () => {
+      if (client !== active || state.phase === 'ready') return;
+      // A stalled page usually means the cached WhatsApp Web build cannot boot.
+      // Refresh that cache once and relaunch before giving up.
+      if (!cacheReset) {
+        console.error('WhatsApp Web: tidak siap setelah 90 detik, menyegarkan cache web lalu mencoba lagi.');
+        client = undefined;
+        state = { phase: 'starting' };
+        clearWebCache(dataPath);
+        closing = destroy(active).finally(() => {
+          closing = undefined;
+          if (!client) launch(dependencies, [executablePath, ...remainingBrowsers], args, true);
+        });
+        return;
+      }
+      close(active, 'error', 'WhatsApp Web belum siap setelah 90 detik. Periksa akses ke web.whatsapp.com, lalu coba lagi.');
+    }, ms);
+    startupTimer.unref();
+  };
+  armStartupTimer();
   let qrVersion = 0;
   active.on('qr', async raw => {
     clearTimeout(startupTimer);
@@ -137,7 +194,10 @@ function launch(dependencies, [executablePath, ...remainingBrowsers]) {
   });
   active.on('authenticated', () => {
     qrVersion++;
-    if (client === active) state = { phase: 'starting' };
+    if (client !== active) return;
+    state = { phase: 'starting' };
+    // Authentication emitted but 'ready' may never follow when the stored session hangs.
+    armStartupTimer(60000);
   });
   active.on('ready', () => {
     clearTimeout(startupTimer);
@@ -155,15 +215,31 @@ function launch(dependencies, [executablePath, ...remainingBrowsers]) {
   void active.initialize().catch(async err => {
     clearTimeout(startupTimer);
     if (client !== active) return;
-    const message = startupError(active, err);
-    const launchFailed = !active.pupBrowser && (err?.name === 'TimeoutError' ||
-      /failed to launch the browser process/i.test(String(err?.message)));
-    console.error('WhatsApp Web startup:', message);
-    if (launchFailed && remainingBrowsers.length) {
-      await active.destroy().catch(() => {});
-      if (client === active) launch(dependencies, remainingBrowsers);
-      return;
+    const detail = String(err?.message || '');
+    const browserMissing = !active.pupBrowser;
+    const relaunch = async (nextBrowsers, nextArgs, nextCacheReset) => {
+      await destroy(active);
+      if (client === active) launch(dependencies, nextBrowsers, nextArgs, nextCacheReset);
+    };
+    // Chrome refuses to start on hosts without a usable sandbox (unprivileged user
+    // namespaces disabled, containers). Retry once with the sandbox turned off.
+    const chromeMissing = /Could not find Chrome|Could not find expected browser|ENOENT/i.test(detail);
+    const profileBusy = /already running|profile.*in use|SingletonLock|ProcessSingleton/i.test(detail);
+    if (!args.includes('--no-sandbox') && (sandboxBlocked(err) || (browserMissing && !chromeMissing && !profileBusy))) {
+      console.error('WhatsApp Web: sandbox Chrome tidak tersedia, mencoba ulang tanpa sandbox.');
+      return relaunch([executablePath, ...remainingBrowsers], [...args, '--no-sandbox', '--disable-setuid-sandbox'], cacheReset);
     }
+    // The chosen browser cannot start at all: fall back to the next installed one.
+    if (browserMissing && remainingBrowsers.length) return relaunch(remainingBrowsers, args, cacheReset);
+    // Browser opened but WhatsApp Web never became ready: refresh the stale web cache once.
+    if (!cacheReset && /Waiting failed|Network\.enable timed out|Protocol error/i.test(detail)) {
+      console.error('WhatsApp Web: cache web tidak terbaca, menyegarkan cache lalu mencoba lagi.');
+      clearWebCache(dataPath);
+      return relaunch([executablePath, ...remainingBrowsers], args, true);
+    }
+    const message = startupError(active, err);
+    console.error('WhatsApp Web startup:', message);
+    if (detail) console.error('WhatsApp Web detail:', detail.split('\n')[0].slice(0, 300));
     close(active, 'error', message);
   });
   return state;
@@ -244,7 +320,7 @@ async function shutdown() {
   if (!active) return;
   client = undefined;
   state = { phase: 'idle' };
-  await active.destroy().catch(() => {});
+  await destroy(active);
 }
 
 module.exports = { start, groups, destination, send, sendToGroup, sendToPhone, shutdown, status: () => state };

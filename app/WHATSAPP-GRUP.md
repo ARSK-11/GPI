@@ -81,8 +81,8 @@ Perintah manual menjalankan botnya sendiri lalu mematikannya setelah selesai. Ka
 
 - **Dependensi bot belum tersedia** — jalankan `npm install --prefix app`.
 - **Chrome atau Edge tidak ditemukan** — pasang browser atau isi `WA_LINKED_BROWSER_PATH` dengan path executable.
-- **Chrome gagal start di container** — set `WA_LINKED_NO_SANDBOX=1`. Ini melemahkan sandbox browser, jadi gunakan hanya bila lingkungan memang memerlukannya.
+- **Chrome gagal start di container** — bot otomatis mencoba ulang tanpa sandbox bila Chrome menolak start (misalnya `No usable sandbox`). Untuk memaksa sejak awal, set `WA_LINKED_NO_SANDBOX=1`. Ini melemahkan sandbox browser, jadi gunakan hanya bila lingkungan memang memerlukannya.
 - **Profil bot sedang dipakai proses lain** — hentikan proses server GPI lain, lalu hubungkan kembali.
-- **QR tidak muncul** — pastikan `npm start` berjalan dan browser dapat membuka `web.whatsapp.com`.
+- **QR tidak muncul** — pastikan `npm start` berjalan dan browser dapat membuka `web.whatsapp.com`. Jika cache WhatsApp Web dari percobaan sebelumnya rusak, bot membersihkan cache itu otomatis (sesi tertaut tidak dihapus) lalu mencoba lagi; percobaan pertama bisa memakan waktu sekitar 30-40 detik.
 - **Grup tidak muncul** — pastikan akun bot sudah menjadi anggota grup, lalu klik **Muat Daftar Grup**.
 - **Nomor tidak ditemukan** — nomor harus terdaftar di WhatsApp dan ditulis dengan format Indonesia (`08…` atau `62…`).
