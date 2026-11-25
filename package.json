@@ -9,7 +9,10 @@
     "bot:install": "npm install --prefix app",
     "cron": "node whatsapp-cron.js",
     "reset-password": "node scripts/reset-password.js",
-    "test": "node --test"
+    "test": "node --test",
+    "docker:deploy": "bash scripts/docker-deploy.sh",
+    "docker:logs": "docker compose logs -f app",
+    "docker:down": "docker compose down"
   },
   "engines": {
     "node": ">=20"

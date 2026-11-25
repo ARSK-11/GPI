@@ -39,7 +39,10 @@ app.use('/assets',staticAssets('assets'));
 app.use('/templates',staticAssets('templates'));
 app.use(express.urlencoded({extended:false,limit:'20mb'}));app.use(express.json({limit:'20mb'}));
 const store=prod?new MySQLStore({...db.config,createDatabaseTable:true}):undefined;
-app.use(session({name:'gpi_cipayung_session',secret,resave:false,saveUninitialized:false,...(store?{store}:{}),cookie:{httpOnly:true,sameSite:'lax',secure:prod,maxAge:8*60*60*1000}}));
+// Secure cookies require HTTPS. Behind a TLS proxy this is automatic; set
+// SESSION_COOKIE_SECURE=0 only when the app is opened directly over plain HTTP.
+const secureCookie=prod&&process.env.SESSION_COOKIE_SECURE!=='0';
+app.use(session({name:'gpi_cipayung_session',secret,resave:false,saveUninitialized:false,...(store?{store}:{}),cookie:{httpOnly:true,sameSite:'lax',secure:secureCookie,maxAge:8*60*60*1000}}));
 // Check the account on each authenticated request; role changes/revocation take effect immediately.
 app.use(async(req,res,next)=>{try{if(req.session.user){const u=(await db.query('SELECT id,username,nama_lengkap,role,status FROM users WHERE id=?',[req.session.user.id]))[0];if(!u||u.status!=='aktif')delete req.session.user;else req.session.user={id:u.id,username:u.username,nama_lengkap:u.nama_lengkap,role:u.role};}next();}catch(e){next(e);}});
 app.get('/social/:kind',async(req,res,next)=>{if(!['youtube','instagram'].includes(req.params.kind))return res.sendStatus(404);try{res.set('Cache-Control','public, max-age=60');res.json(await social.feed(req.params.kind));}catch(e){next(e);}});

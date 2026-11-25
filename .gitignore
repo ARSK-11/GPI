@@ -1,6 +1,7 @@
 node_modules/
 .env
 .env.vercel
+.env.docker
 *-dump.sql
 *.log
 .wwebjs_cache/

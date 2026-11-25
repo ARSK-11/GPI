@@ -1,0 +1,49 @@
+services:
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    env_file: .env.docker
+    environment:
+      MARIADB_DATABASE: gpi_cipayung
+    volumes:
+      - db_data:/var/lib/mysql
+      # Hanya dijalankan saat volume database masih kosong (pertama kali dibuat).
+      - ./database/database_gpi_cipayung.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p\"$$MARIADB_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+    networks: [gpi]
+
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env.docker
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      TZ: Asia/Jakarta
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_SSL: 0
+      WA_LINKED_SESSION_DIR: /data/wa-session
+      # Chrome di container tidak punya sandbox kernel; bot tetap berjalan dengan benar.
+      WA_LINKED_NO_SANDBOX: 1
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - uploads_data:/app/uploads
+      - wa_session:/data/wa-session
+    networks: [gpi]
+
+volumes:
+  db_data:
+  uploads_data:
+  wa_session:
+
+networks:
+  gpi:
