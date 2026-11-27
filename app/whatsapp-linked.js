@@ -46,6 +46,29 @@ function error(message, status) {
   return Object.assign(new Error(message), { status });
 }
 
+const pause = ms => new Promise(resolve => {
+  const timer = setTimeout(resolve, ms);
+  timer.unref?.();
+});
+
+function sessionDataPath() {
+  return process.env.WA_LINKED_SESSION_DIR?.trim() || path.join(sessionRoot, 'auth');
+}
+
+// WhatsApp Web stores the linked-device credentials in this profile. While it is
+// present, WhatsApp Web tries to resume the old session instead of showing a QR;
+// after the device is unlinked from the phone that resume hangs forever.
+function purgeSession() {
+  const dir = path.join(sessionDataPath(), 'session-gpi-cipayung');
+  try {
+    fs.rmSync(dir, { recursive: true, force: true, maxRetries: 4, retryDelay: 150 });
+    return true;
+  } catch (err) {
+    console.error('Gagal menghapus sesi WhatsApp:', err.message);
+    return false;
+  }
+}
+
 function browserPaths() {
   const explicit = process.env.WA_LINKED_BROWSER_PATH?.trim();
   if (explicit) return fs.existsSync(explicit) ? [explicit] : [];
@@ -136,17 +159,31 @@ async function destroy(active) {
   }
 }
 
-function close(active, phase, message) {
+function close(active, phase, message, purge = false) {
   if (client !== active) return;
   client = undefined;
   state = { phase, message };
-  closing = Promise.resolve().then(() => destroy(active)).catch(() => {}).finally(() => {
-    closing = undefined;
-  });
+  closing = Promise.resolve()
+    .then(() => destroy(active))
+    .then(() => { if (purge) purgeSession(); })
+    .catch(() => {})
+    .finally(() => {
+      closing = undefined;
+    });
 }
 
 function start() {
-  if (client || closing) return state;
+  if (client) return state;
+  if (closing) {
+    // Clicking "Hubungkan" right after "Putuskan" must not be ignored: the old
+    // browser may still be closing, so launch again as soon as it is gone.
+    state = { phase: 'starting' };
+    const pending = closing;
+    pending.then(() => {
+      if (!client) start();
+    });
+    return state;
+  }
   let Client, LocalAuth, QRCode;
   try {
     ({ Client, LocalAuth } = require('whatsapp-web.js'));
@@ -167,7 +204,7 @@ function start() {
     state = { phase: 'error', message: 'WA_WEB_VERSION tidak valid. Gunakan format seperti 2.3000.1053021455-alpha.' };
     return state;
   }
-  const dataPath = process.env.WA_LINKED_SESSION_DIR?.trim() || path.join(sessionRoot, 'auth');
+  const dataPath = sessionDataPath();
   try {
     fs.mkdirSync(dataPath, { recursive: true, mode: 0o700 });
   } catch {
@@ -240,11 +277,13 @@ function launch(dependencies, [executablePath, ...remainingBrowsers], args = bro
   });
   active.on('auth_failure', () => {
     clearTimeout(startupTimer);
-    close(active, 'error', 'Sesi WhatsApp gagal. Coba hubungkan kembali.');
+    // Stored credentials were rejected (for example the device was removed from the
+    // phone). Drop the dead profile so the next attempt can display a fresh QR.
+    close(active, 'error', 'Sesi WhatsApp tidak valid dan sudah dihapus. Klik Hubungkan WhatsApp untuk memindai QR baru.', true);
   });
   active.on('disconnected', () => {
     clearTimeout(startupTimer);
-    close(active, 'idle', 'Koneksi terputus. Hubungkan kembali.');
+    close(active, 'idle', 'Koneksi terputus dan sesi lokal dihapus. Hubungkan lagi untuk memindai QR baru.', true);
   });
   void active.initialize().catch(async err => {
     clearTimeout(startupTimer);
@@ -436,6 +475,42 @@ async function sendToPhone(phone, message) {
   return send(target, message);
 }
 
+// Disconnect and delete the linked-device profile so the next connection is forced
+// to show a new QR. This is what the "Putuskan" button uses.
+async function disconnect({ purge = true } = {}) {
+  const active = client;
+  const wasReady = state.phase === 'ready';
+  const pending = closing;
+  // Cancel any pending relaunch so a stale client cannot reappear after cleanup.
+  runId++;
+  client = undefined;
+  state = { phase: 'idle', message: 'Memutuskan koneksi WhatsApp…' };
+  if (pending) {
+    try { await pending; } catch { /* cleanup is best effort */ }
+  }
+  if (active) {
+    // Best effort: unlink the device from the WhatsApp account so it also leaves the
+    // phone's linked-devices list. Newer WhatsApp Web builds can make the internal
+    // call used by logout() throw, so never let it block the local cleanup.
+    if (wasReady) {
+      try {
+        await Promise.race([active.logout().catch(() => {}), pause(8000)]);
+      } catch {
+        // destroy() and purgeSession() below still run.
+      }
+    }
+    await destroy(active);
+  }
+  if (purge) purgeSession();
+  state = {
+    phase: 'idle',
+    message: purge
+      ? 'Sesi WhatsApp dihapus. Klik Hubungkan WhatsApp lalu pindai QR baru.'
+      : 'Koneksi WhatsApp diputuskan.'
+  };
+  return state;
+}
+
 async function shutdown() {
   // Cancel any pending relaunch so a stuck connection cannot come back on its own.
   runId++;
@@ -446,4 +521,4 @@ async function shutdown() {
   if (closing) await closing;
 }
 
-module.exports = { start, groups, destination, send, sendToGroup, sendToPhone, shutdown, normalizePhone, status: () => state };
+module.exports = { start, disconnect, groups, destination, send, sendToGroup, sendToPhone, shutdown, normalizePhone, status: () => state };

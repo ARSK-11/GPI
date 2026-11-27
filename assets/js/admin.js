@@ -381,17 +381,21 @@ async function connectBot() {
 }
 
 async function disconnectBot() {
+  if (!confirm('Putuskan WhatsApp dan hapus sesi bot?\n\nPerangkat bot akan dilepas dan Anda perlu memindai QR baru untuk menghubungkan lagi.')) return;
   const btn = $('#waBotDisconnect');
   if (btn) { btn.disabled = true; btn.textContent = 'Memutuskan…'; }
   try {
-    await api('wa_bot_disconnect', { method:'POST', body: new FormData() });
-    notify('Koneksi bot WhatsApp diputuskan. Klik Hubungkan WhatsApp untuk memulai ulang.');
+    const json = await api('wa_bot_disconnect', { method:'POST', body: new FormData() });
+    notify(json.message || 'Sesi bot WhatsApp dihapus. Klik Hubungkan WhatsApp lalu pindai QR baru.');
+    // Clear the previous QR so the dashboard does not show a stale code.
+    const img = $('#waBotQr');
+    if (img) { img.removeAttribute('src'); }
+    if ($('#waBotQrWrap')) $('#waBotQrWrap').hidden = true;
     await loadBotStatus();
   } catch (err) {
     notify(err.message, 'danger');
-    if (btn) btn.disabled = false;
   } finally {
-    if (btn) btn.textContent = 'Putuskan';
+    if (btn) { btn.disabled = false; btn.textContent = 'Putuskan'; }
   }
 }
 

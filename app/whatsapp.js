@@ -223,6 +223,8 @@ async function connectAndWait(seconds = 120) {
 }
 
 const shutdown = () => bot.shutdown();
-const disconnect = () => bot.shutdown();
+// Deliberately different from shutdown(): the button must delete the stored session
+// so the next connect generates a new QR instead of resuming a dead one.
+const disconnect = () => bot.disconnect();
 
 module.exports = { preview, announcement, cron, sendTest, status, saveGroup, groups, connect, connectAndWait, shutdown, disconnect, message, cleanPhone, contacts, ready };

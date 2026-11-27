@@ -111,7 +111,7 @@ router.all('/',(req,res,next)=>{
  if(a==='wa_bot_status')return res.json({success:true,data:await wa.status()});
  if(a==='wa_bot_groups'){if(!botAdmin)throw error('Hanya Admin yang dapat mengelola bot WhatsApp.',403);return res.json({success:true,data:{groups:await wa.groups()}});}
    if(a==='wa_bot_connect'){if(!botAdmin)throw error('Hanya Admin yang dapat menghubungkan bot WhatsApp.',403);return res.json({success:true,data:wa.connect()});}
-  if(a==='wa_bot_disconnect'){if(!botAdmin)throw error('Hanya Admin yang dapat memutuskan bot WhatsApp.',403);await wa.disconnect();return good(res,'Koneksi bot WhatsApp diputuskan.');}
+  if(a==='wa_bot_disconnect'){if(!botAdmin)throw error('Hanya Admin yang dapat memutuskan bot WhatsApp.',403);await wa.disconnect();return good(res,'Koneksi bot WhatsApp diputuskan dan sesi lokal dihapus. Klik Hubungkan WhatsApp untuk memindai QR baru.');}
  if(a==='wa_bot_save_group'){if(!botAdmin)throw error('Hanya Admin yang dapat mengubah grup tujuan bot.',403);const group=await wa.saveGroup(str(d.group_id),str(d.group_name));return good(res,'Grup tujuan bot WhatsApp disimpan.',{group});}
  if(a==='wa_bot_test'){if(!botAdmin)throw error('Hanya Admin yang dapat mengirim pesan uji bot.',403);const result=await wa.sendTest(str(d.phone),str(d.message),str(d.target_type)==='group'?'group':str(d.target_type)==='phone'?'phone':'auto');return good(res,'Pesan uji diproses bot.',{result});}
  if(a==='announcement_preview'){const j=await db.find('jadwal',id);if(!j)throw error('Jadwal tidak ditemukan.',404);return res.json({success:true,data:await wa.preview(j)});}

@@ -13,8 +13,11 @@ const behaviour = {
   numberId: null,
   numberIdError: null,
   sendResult: { id: { _serialized: 'MSG-1' } },
-  sendError: null
+  sendError: null,
+  destroyDelay: 0
 };
+
+const instances = [];
 
 class FakeClient {
   constructor(options) {
@@ -22,6 +25,7 @@ class FakeClient {
     this.handlers = {};
     this.info = { wid: { _serialized: '628111111111@c.us' } };
     this.pupPage = { evaluate: async () => behaviour.chatExists };
+    instances.push(this);
   }
   on(event, handler) {
     (this.handlers[event] ||= []).push(handler);
@@ -35,7 +39,10 @@ class FakeClient {
     return Promise.resolve();
   }
   destroy() {
-    return Promise.resolve();
+    return new Promise(resolve => setTimeout(resolve, behaviour.destroyDelay));
+  }
+  async logout() {
+    calls.push(['logout']);
   }
   async getChats() {
     return behaviour.chats;
@@ -76,7 +83,8 @@ function reset(next = {}) {
     numberId: null,
     numberIdError: null,
     sendResult: { id: { _serialized: 'MSG-1' } },
-    sendError: null
+    sendError: null,
+    destroyDelay: 0
   }, next);
 }
 
@@ -161,4 +169,31 @@ test('grup yang tidak ditemukan tidak dicoba dikirimi', async () => {
   assert.equal(result.status, 'gagal');
   assert.match(result.error, /tidak ditemukan/i);
   assert.equal(sent().length, 0);
+});
+
+test('putuskan melepas perangkat, menghapus sesi, lalu bisa menghasilkan QR lagi', async () => {
+  reset();
+  const sessionDir = path.join(process.env.WA_LINKED_SESSION_DIR, 'session-gpi-cipayung');
+  fs.mkdirSync(sessionDir, { recursive: true });
+  fs.writeFileSync(path.join(sessionDir, 'marker'), 'sesi lama');
+
+  const state = await bot.disconnect();
+  assert.equal(state.phase, 'idle');
+  assert.equal(fs.existsSync(sessionDir), false, 'folder sesi harus benar-benar terhapus');
+  assert.equal(calls.some(call => call[0] === 'logout'), true, 'perangkat harus dilepas dari akun');
+
+  // Koneksi berikutnya harus memulai sesi baru (QR), bukan memakai sesi mati.
+  bot.start();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(bot.status().phase, 'ready');
+});
+
+test('hubungkan saat penutupan masih berjalan tidak diabaikan', async () => {
+  reset({ destroyDelay: 40 });
+  const active = instances.at(-1);
+  active.emit('disconnected');
+  const queued = bot.start();
+  assert.equal(queued.phase, 'starting');
+  await new Promise(resolve => setTimeout(resolve, 120));
+  assert.equal(bot.status().phase, 'ready');
 });
