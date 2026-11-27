@@ -84,6 +84,27 @@ test('pratinjau tidak mengirim pesan dan menampilkan grup serta penerima', async
   assert.equal(sent.length, 0);
 });
 
+test('pesan uji dapat dikirim ke grup tujuan', async () => {
+  logs.length = 0;
+  sent.length = 0;
+  const result = await wa.sendTest('', 'Halo grup', 'group');
+  assert.equal(result.status, 'diterima');
+  assert.equal(result.group, 'Grup Uji GPI');
+  assert.equal(sent[0].type, 'group');
+  assert.equal(sent[0].id, '123456789-987654321@g.us');
+  assert.equal(logs[0].message_type, 'test_bot');
+  assert.equal(logs[0].status, 'terkirim');
+});
+
+test('nomor kosong otomatis memakai grup tujuan agar opsi grup tetap bekerja', async () => {
+  logs.length = 0;
+  sent.length = 0;
+  const result = await wa.sendTest('', 'Halo grup');
+  assert.equal(result.status, 'diterima');
+  assert.equal(result.group, 'Grup Uji GPI');
+  assert.equal(sent[0].type, 'group');
+});
+
 test('cron berhenti jelas saat bot belum terhubung dan tidak menandai jadwal', async () => {
   bot.phase = 'idle';
   updates.length = 0;

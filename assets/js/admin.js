@@ -402,7 +402,7 @@ async function loadBotGroups() {
     const json = await api('wa_bot_groups');
     const groups = json.data?.groups || [];
     const current = botState?.group?.id || sel.value;
-    sel.innerHTML = '<option value="">Pilih grup WhatsApp…</option>' + groups.map(g => `<option value="${esc(g.id)}">${esc(g.name)}</option>`).join('');
+    sel.innerHTML = '<option value="">Pilih grup WhatsApp…</option>' + groups.map(g => `<option value="${esc(g.id)}" data-name="${esc(g.name)}">${esc(g.name)}${g.readOnly ? ' — hanya admin' : ''}</option>`).join('');
     if (current) sel.value = current;
     notify(`${groups.length} grup ditemukan.`);
   } catch (err) { notify(err.message, 'danger'); }
@@ -412,7 +412,7 @@ async function saveBotGroup() {
   const sel = $('#waBotGroup');
   const id = sel?.value || '';
   if (!id) return notify('Pilih grup terlebih dahulu.', 'danger');
-  const name = sel.options[sel.selectedIndex]?.textContent || '';
+  const name = sel.options[sel.selectedIndex]?.dataset.name || sel.options[sel.selectedIndex]?.textContent || '';
   try {
     await api('wa_bot_save_group', { method:'POST', body:{ group_id:id, group_name:name } });
     notify('Grup tujuan bot disimpan.');
@@ -420,15 +420,41 @@ async function saveBotGroup() {
   } catch (err) { notify(err.message, 'danger'); }
 }
 
+function syncBotTestTarget() {
+  const group = $('#waBotTestTarget')?.value === 'group';
+  const phone = $('#waBotTestPhone');
+  if (phone) {
+    phone.hidden = group;
+    phone.disabled = group;
+  }
+  const hint = $('#waBotTestHint');
+  if (hint) hint.textContent = group
+    ? 'Grup yang dipilih di atas akan dipakai untuk uji grup.'
+    : 'Masukkan nomor yang terdaftar di WhatsApp, misalnya 08xxxxxxxxxx.';
+}
+
 async function sendBotTest() {
-  const phone = $('#waBotTestPhone')?.value || '';
+  const btn = $('#waBotTest');
+  // WhatsApp Web can take seconds to confirm a send. Without this guard every
+  // extra click queues another message to the same target.
+  if (btn?.disabled) return;
   const message = $('#waBotTestMessage')?.value || '';
-  if (!phone.trim()) return notify('Isi nomor WhatsApp tujuan uji.', 'danger');
+  const targetType = $('#waBotTestTarget')?.value === 'group' ? 'group' : 'phone';
+  // For a group test, use the group currently chosen in the picker when it has not
+  // been saved yet; the server accepts a serialized group id directly.
+  const selectedGroup = $('#waBotGroup')?.value || '';
+  const phone = targetType === 'group' ? selectedGroup : ($('#waBotTestPhone')?.value || '');
+  if (targetType === 'group' && !phone && !botState?.group?.id) return notify('Pilih atau simpan grup tujuan terlebih dahulu.', 'danger');
+  if (targetType === 'phone' && !phone.trim()) return notify('Isi nomor WhatsApp tujuan uji.', 'danger');
+  if (btn) { btn.disabled = true; btn.dataset.label = btn.textContent; btn.textContent = 'Mengirim…'; }
   try {
-    const json = await api('wa_bot_test', { method:'POST', body:{ phone, message } });
-    notify(json.result?.status === 'diterima' ? 'Pesan uji terkirim.' : 'Pesan uji diproses dengan status ' + (json.result?.status || '-') + '.');
+    const json = await api('wa_bot_test', { method:'POST', body:{ phone, message, target_type: targetType } });
+    const result = json.result || {};
+    const target = targetType === 'group' ? (result.group || 'grup tujuan') : (result.phone || phone);
+    notify(result.status === 'diterima' ? `Pesan uji terkirim ke ${target}.` : `Pesan uji ke ${target} diproses dengan status ${result.status || '-'}${result.error ? ': ' + result.error : '.'}`, result.status === 'diterima' ? 'success' : 'danger');
     await loadWhatsappLogs();
   } catch (err) { notify(err.message, 'danger'); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = btn.dataset.label || 'Kirim Pesan Uji'; } }
 }
 
 function openModal(id) { const m = $('#' + id); if (m) { m.classList.add('show'); m.setAttribute('aria-hidden', 'false'); } }
@@ -1566,6 +1592,8 @@ function attachEvents() {
   $('#waBotLoadGroups')?.addEventListener('click', loadBotGroups);
   $('#waBotSaveGroup')?.addEventListener('click', saveBotGroup);
   $('#waBotTest')?.addEventListener('click', sendBotTest);
+  $('#waBotTestTarget')?.addEventListener('change', syncBotTestTarget);
+  syncBotTestTarget();
   $('#sendAnnouncement')?.addEventListener('click', sendAnnouncementNow);
 }
 

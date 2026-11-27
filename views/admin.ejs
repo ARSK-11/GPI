@@ -199,7 +199,9 @@
             <div class="toolbar"><button class="btn ghost" id="waBotLoadGroups" type="button">Muat Daftar Grup</button><button class="btn" id="waBotSaveGroup" type="button">Simpan Grup</button></div>
             <p class="muted" id="waBotGroupInfo"></p>
             <h3>3. Uji Kirim</h3>
+            <label>Kirim ke<select id="waBotTestTarget"><option value="phone">Nomor WhatsApp</option><option value="group">Grup tujuan</option></select></label>
             <input id="waBotTestPhone" inputmode="tel" placeholder="08xxxxxxxxxx">
+            <small id="waBotTestHint" class="muted">Masukkan nomor yang terdaftar di WhatsApp, misalnya 08xxxxxxxxxx.</small>
             <textarea id="waBotTestMessage" rows="2" maxlength="4096">Uji bot WhatsApp GPI Cipayung.</textarea>
             <button class="btn ghost" id="waBotTest" type="button">Kirim Pesan Uji</button>
           </div>

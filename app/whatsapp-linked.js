@@ -6,6 +6,25 @@ const path = require('node:path');
 
 const groupId = /^\d+(?:-\d+)?@g\.us$/;
 const accountId = /^(\d+)@(?:c\.us|lid)$/;
+
+function serialized(wid) {
+  return wid?._serialized || wid?.$1 || '';
+}
+
+// WhatsApp Web may return a wid only as `$1`, and some builds have removed the
+// module behind getNumberId(). Normalise the number here so the caller always
+// has a usable chat id even when that lookup is unavailable.
+function normalizePhone(value) {
+  const raw = String(value ?? '').trim().replace(/@.*$/, '');
+  const international = raw.startsWith('+');
+  let digits = raw.replace(/\D/g, '');
+  if (!international) {
+    if (digits.startsWith('0')) digits = '62' + digits.slice(1);
+    else if (digits.startsWith('8')) digits = '62' + digits;
+  }
+  if (!/^[1-9]\d{7,14}$/.test(digits)) throw error('Nomor WhatsApp tidak valid. Gunakan format 08xxxxxxxxxx atau 62xxxxxxxxxx.', 422);
+  return digits;
+}
 const sessionRoot = path.join(process.env.LOCALAPPDATA || os.homedir(), 'GPI-Cipayung', 'whatsapp-web');
 // WhatsApp Web build 2.3000.1055852612+ breaks logged-out sessions: WAWebSocketModel
 // returns null and whatsapp-web.js never emits qr. Pin the last verified build.
@@ -270,14 +289,35 @@ function ready(expectedAccount) {
 
 async function groups() {
   const active = ready();
-  const chats = await active.getChats();
-  if (client !== active) throw error('Koneksi WhatsApp berubah. Muat ulang daftar grup.', 409);
-  return chats
-    .filter(chat => chat.isGroup && groupId.test(chat.id?._serialized))
-    .map(chat => ({
-      id: chat.id._serialized,
-      name: chat.name || chat.id._serialized,
+  let rows;
+  try {
+    const chats = await active.getChats();
+    rows = chats.map(chat => ({
+      id: serialized(chat.id),
+      name: chat.name || '',
+      isGroup: Boolean(chat.isGroup),
       readOnly: Boolean(chat.isReadOnly)
+    }));
+  } catch (err) {
+    // getChats() serializes every chat and fails completely when one LID chat cannot
+    // be resolved. Read the raw chat list so the group picker still works.
+    rows = await active.pupPage.evaluate(() => window.require('WAWebCollections').Chat.getModelsArray().map(chat => {
+      const id = chat.id?._serialized || chat.id?.$1 || '';
+      return {
+        id,
+        name: chat.name || chat.formattedTitle || '',
+        isGroup: /@g\.us$/.test(id),
+        readOnly: Boolean(chat.groupMetadata?.announce)
+      };
+    })).catch(() => { throw err; });
+  }
+  if (client !== active) throw error('Koneksi WhatsApp berubah. Muat ulang daftar grup.', 409);
+  return rows
+    .filter(chat => chat.isGroup && groupId.test(chat.id))
+    .map(chat => ({
+      id: chat.id,
+      name: chat.name || chat.id,
+      readOnly: chat.readOnly
     }))
     .sort((a, b) => a.name.localeCompare(b.name, 'id'));
 }
@@ -286,19 +326,34 @@ async function destination(type, value, expectedAccount) {
   const active = ready(expectedAccount);
   const account = state.account;
   let target;
-  if (type === 'group' && groupId.test(value)) {
-    const chat = await active.getChatById(value);
-    if (!chat?.isGroup || chat.isReadOnly || chat.id?._serialized !== value) {
-      throw error('Grup tidak tersedia untuk pengiriman.', 422);
+  if (type === 'group') {
+    const id = String(value || '');
+    if (!groupId.test(id)) throw error('ID grup WhatsApp tidak valid.', 422);
+    let name = id;
+    try {
+      // Best effort only: it loads the chat so sendMessage() can find it. A group
+      // whose metadata is not cached yet must not block delivery.
+      const chat = await active.getChatById(id);
+      if (chat && !chat.isGroup) throw error('Tujuan bukan grup WhatsApp.', 422);
+      name = chat?.name || id;
+    } catch (err) {
+      if (err.status) throw err;
     }
-    target = { id: value, name: chat.name || value, type, value };
-  } else if (type === 'phone' && /^\+?[\d ().-]{7,28}$/.test(value)) {
-    const digits = value.replace(/\D/g, '');
-    const phone = !value.startsWith('+') && digits.startsWith('08') ? '62' + digits.slice(1) : digits;
-    if (!/^[1-9]\d{7,14}$/.test(phone)) throw error('Nomor WhatsApp tidak valid.', 422);
-    const registered = await active.getNumberId(phone);
-    if (!accountId.test(registered?._serialized)) throw error('Nomor tidak ditemukan di WhatsApp.', 422);
-    target = { id: registered._serialized, name: '+' + phone, type, value: '+' + phone };
+    target = { id, name, type, value: id };
+  } else if (type === 'phone') {
+    const phone = normalizePhone(value);
+    let id = phone + '@c.us';
+    try {
+      const registered = await active.getNumberId(phone);
+      const wid = serialized(registered);
+      // getNumberId() can return a LID instead of a phone-number wid. Both are
+      // valid delivery targets; only fall back when it returns nothing usable.
+      if (wid && accountId.test(wid)) id = wid;
+    } catch {
+      // Some WhatsApp Web builds removed the module used by getNumberId().
+      // Keep the phone-number chat id instead of failing the whole send.
+    }
+    target = { id, name: '+' + phone, type, value: '+' + phone };
   } else {
     throw error('Pilih grup atau isi nomor WhatsApp yang valid.', 422);
   }
@@ -306,22 +361,73 @@ async function destination(type, value, expectedAccount) {
   return { ...target, account };
 }
 
-async function send(target, message) {
+// Ask WhatsApp Web whether a chat is already resolvable without building a full
+// chat model. Returns true/false, or null when the check cannot be performed.
+async function chatExists(active, id) {
+  if (!active?.pupPage?.evaluate) return null;
   try {
-    const active = ready(target.account);
-    const result = await active.sendMessage(target.id, message, { sendSeen: false, linkPreview: false });
-    const messageId = result?.id?._serialized;
-    if (messageId) return { status: 'diterima', messageId };
-  } catch (err) {
-    // WhatsApp Web may have accepted the send before the browser reported an error.
-    return { status: 'tidak_pasti', error: String(err?.message || 'Koneksi WhatsApp Web terputus.').slice(0, 300) };
+    const found = await active.pupPage.evaluate(async chatId => {
+      if (!window.WWebJS?.getChat) return undefined;
+      const chat = await window.WWebJS.getChat(chatId, { getAsModel: false });
+      return Boolean(chat);
+    }, id);
+    return typeof found === 'boolean' ? found : null;
+  } catch {
+    return null;
   }
-  return { status: 'tidak_pasti' };
+}
+
+function failedSend(target, detail) {
+  const text = String(detail || '');
+  if (/not registered|not on whatsapp|isn't on whatsapp|invalid wid|wid.*invalid|no such user|item[- ]not[- ]found|chat.*not.*found|could not find.*chat|findOrCreateLatestChat|404/i.test(text)) {
+    return {
+      status: 'gagal',
+      error: target.type === 'group'
+        ? 'Grup tidak ditemukan atau akun bot bukan anggotanya. Muat ulang daftar grup dan pastikan bot sudah bergabung.'
+        : 'Nomor tidak terdaftar di WhatsApp. Periksa kembali nomor tersebut.'
+    };
+  }
+  if (/not.?authori[sz]ed|forbidden|admin.*only|only.*admin|announce|restricted|403|401/i.test(text)) {
+    return {
+      status: 'gagal',
+      error: target.type === 'group'
+        ? 'Akun bot tidak diizinkan mengirim ke grup ini. Pastikan bot masih anggota dan grup tidak disetel "hanya admin yang dapat mengirim".'
+        : 'Akun bot tidak diizinkan mengirim ke nomor ini.'
+    };
+  }
+  // WhatsApp Web may have accepted the send before the browser reported an error.
+  return { status: 'tidak_pasti', error: text.slice(0, 300) || 'Koneksi WhatsApp Web terputus.' };
+}
+
+async function send(target, message) {
+  const active = ready(target.account);
+  try {
+    const result = await active.sendMessage(target.id, message, { sendSeen: false, linkPreview: false });
+    if (result) return { status: 'diterima', messageId: serialized(result.id) };
+    // A resolved send without a message object is not proof of failure: WhatsApp
+    // Web can index the sent message under the contact's alternate (LID/PN) wid.
+    // Report it as uncertain so the same message is not sent twice automatically.
+    return {
+      status: 'tidak_pasti',
+      error: target.type === 'group'
+        ? 'WhatsApp tidak mengembalikan konfirmasi untuk grup ini. Pesan mungkin sudah terkirim; periksa grup sebelum mengirim ulang.'
+        : 'WhatsApp tidak mengembalikan konfirmasi untuk nomor ini. Pesan mungkin sudah terkirim; periksa WhatsApp sebelum mengirim ulang.'
+    };
+  } catch (err) {
+    return failedSend(target, err?.message || 'Koneksi WhatsApp Web terputus.');
+  }
 }
 
 async function sendToGroup(id, message) {
   if (!groupId.test(id)) throw error('ID grup WhatsApp tidak valid.', 422);
-  const target = await destination('group', id);
+  // Send straight to the serialized group id. Validating through getChatById()
+  // builds a full chat model (group metadata update) and fails for groups whose
+  // metadata is not loaded yet, even though WhatsApp can still deliver the message.
+  const active = ready();
+  const target = { id, name: id, type: 'group', value: id, account: state.account };
+  if (await chatExists(active, id) === false) {
+    return { status: 'gagal', error: 'Grup tidak ditemukan. Pastikan akun bot masih menjadi anggota grup, lalu muat ulang daftar grup.' };
+  }
   return send(target, message);
 }
 
@@ -340,4 +446,4 @@ async function shutdown() {
   if (closing) await closing;
 }
 
-module.exports = { start, groups, destination, send, sendToGroup, sendToPhone, shutdown, status: () => state };
+module.exports = { start, groups, destination, send, sendToGroup, sendToPhone, shutdown, normalizePhone, status: () => state };

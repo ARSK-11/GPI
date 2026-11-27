@@ -45,9 +45,14 @@ async function contacts(j) {
   const names = [...new Set(Object.keys(roles).map(k => j[k] || '').join(',').split(/[,;\/&]+/).map(v => v.trim()).filter(Boolean))];
   const found = new Map();
   for (const n of names) {
-    const rows = await db.query('SELECT id,nama_lengkap,no_hp,whatsapp FROM jemaat WHERE nama_lengkap LIKE ? ORDER BY nama_lengkap LIMIT 1', ['%' + n + '%']);
+    // Prefer an exact name match so "Budi" does not pick "Budiman" from the
+    // congregation list when the schedule only stores the short name.
+    const rows = await db.query(
+      'SELECT id,nama_lengkap,no_hp,whatsapp FROM jemaat WHERE nama_lengkap=? OR nama_lengkap LIKE ? ORDER BY (nama_lengkap=?) DESC, CHAR_LENGTH(nama_lengkap) ASC, nama_lengkap ASC LIMIT 1',
+      [n, '%' + n + '%', n]
+    );
     const phone = rows[0] ? cleanPhone(rows[0].whatsapp || rows[0].no_hp) : '';
-    if (phone && !found.has(phone)) found.set(phone, rows[0]);
+    if (/^\d{8,15}$/.test(phone) && !found.has(phone)) found.set(phone, rows[0]);
   }
   return [...found.values()];
 }
@@ -178,13 +183,26 @@ async function cron() {
   }
 }
 
-async function sendTest(phone, text) {
+async function sendTest(phone, text, type = 'auto') {
   ensureReady();
-  const target = cleanPhone(phone);
-  if (!/^62[1-9]\d{7,12}$/.test(target)) throw error('Nomor WhatsApp Indonesia tidak valid. Contoh: 081234567890.', 422);
   const body = String(text || '').trim();
   if (!body) throw error('Isi pesan uji wajib diisi.', 422);
   if (body.length > 4096) throw error('Pesan maksimal 4.096 karakter.', 422);
+  const raw = String(phone || '').trim();
+  // Accept a saved group, an explicit group id, or auto-detect from an empty number field
+  // so the group option also works when the browser still runs an older admin.js.
+  const groupTarget = type === 'group' || GROUP_ID.test(raw) || (!raw && type !== 'phone');
+  if (groupTarget) {
+    const saved = await groupSettings();
+    const groupId = GROUP_ID.test(raw) ? raw : saved.id;
+    if (!groupId) throw error('Grup tujuan bot belum dipilih. Pilih grup tujuan atau muat daftar grup lalu simpan.', 409);
+    const target = GROUP_ID.test(raw) ? raw : (saved.name || 'Grup WhatsApp GPI Cipayung');
+    const result = await bot.sendToGroup(groupId, body);
+    await record(null, 'test_bot', target, '', body, result);
+    return { ...result, group: target, target };
+  }
+  const target = cleanPhone(raw);
+  if (!/^62[1-9]\d{7,12}$/.test(target)) throw error('Nomor WhatsApp Indonesia tidak valid. Contoh: 081234567890.', 422);
   const result = await bot.sendToPhone(target, body);
   await record(null, 'test_bot', '+' + target, target, body, result);
   return { ...result, phone: target };

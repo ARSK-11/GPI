@@ -29,7 +29,7 @@ npm install --prefix app
 3. Klik **Hubungkan WhatsApp**. QR akan muncul.
 4. Di HP: **WhatsApp → Perangkat tertaut → Tautkan perangkat**, pindai QR.
 5. Setelah status **Terhubung**, klik **Muat Daftar Grup**, pilih grup gereja, lalu **Simpan Grup**.
-6. Klik **Kirim Pesan Uji** ke nomor sendiri untuk memastikan bot bekerja.
+6. Klik **Kirim Pesan Uji**. Pilih **Nomor WhatsApp** dan kirim ke nomor sendiri, atau pilih **Grup tujuan** untuk memastikan bot bisa mengirim ke grup gereja.
 
 Sesi disimpan di `WA_LINKED_SESSION_DIR` atau, jika kosong, di folder privat akun sistem (`GPI-Cipayung/whatsapp-web`). Jangan simpan sesi di dalam folder yang disajikan publik atau di Git. Jalankan satu proses server per folder sesi.
 
@@ -85,5 +85,7 @@ Perintah manual menjalankan botnya sendiri lalu mematikannya setelah selesai. Ka
 - **Profil bot sedang dipakai proses lain** — hentikan proses server GPI lain, lalu hubungkan kembali.
 - **Status macet di "Menyiapkan…"** — klik **Putuskan** di kartu Koneksi Bot. Tombol ini menutup browser bot dan melepas kunci profil, lalu klik **Hubungkan WhatsApp** untuk memulai ulang (sesi tertaut tetap tersimpan, jadi biasanya tidak perlu pindai QR lagi).
 - **QR tidak muncul** — pastikan `npm start` berjalan dan browser dapat membuka `web.whatsapp.com`. Jika cache WhatsApp Web dari percobaan sebelumnya rusak, bot membersihkan cache itu otomatis (sesi tertaut tidak dihapus) lalu mencoba lagi; percobaan pertama bisa memakan waktu sekitar 30-40 detik.
-- **Grup tidak muncul** — pastikan akun bot sudah menjadi anggota grup, lalu klik **Muat Daftar Grup**.
-- **Nomor tidak ditemukan** — nomor harus terdaftar di WhatsApp dan ditulis dengan format Indonesia (`08…` atau `62…`).
+- **Grup tidak muncul** — pastikan akun bot sudah menjadi anggota grup, buka grup itu sekali dari aplikasi WhatsApp di HP, lalu klik **Muat Daftar Grup**.
+- **Pesan ke grup tidak masuk** — cek riwayat pengiriman di menu Bot WhatsApp. Status `gagal` berarti grup tidak ditemukan atau akun bot bukan anggota; status `tidak_pasti` berarti koneksi terputus saat mengirim. Pastikan juga grup tidak disetel "hanya admin yang dapat mengirim" kecuali akun bot adalah admin grup.
+- **Nomor tidak ditemukan** — nomor harus terdaftar di WhatsApp dan ditulis dengan format Indonesia (`08…` atau `62…`). Bot tetap mencoba mengirim ke nomor tersebut walaupun pemeriksaan otomatis WhatsApp Web gagal; status `gagal` berarti nomor benar-benar tidak terdaftar, sedangkan `tidak_pasti` berarti pengiriman perlu dicek manual sebelum diulang.
+- **Pesan uji ke grup** — pilih **Grup tujuan** pada Uji Kirim. Grup yang sedang dipilih di daftar bisa langsung diuji tanpa harus disimpan lebih dulu; label "hanya admin" berarti akun bot harus menjadi admin grup untuk bisa mengirim.
